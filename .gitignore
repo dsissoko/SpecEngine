@@ -1,0 +1,6 @@
+.env
+.env.local
+docs/dial
+
+# Répertoire temporaire racine
+tmp/

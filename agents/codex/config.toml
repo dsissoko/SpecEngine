@@ -1,0 +1,88 @@
+model = "gpt-5.1"
+#model = "claude-sonnet-4-5"
+#model= "gpt-5-mini-2025-08-07"
+#model= "gpt-5-nano-2025-08-07"
+#model = "gpt-5.3-codex"
+#model_reasoning_effort = "none"
+#model_reasoning_effort = "minimal"
+#model_reasoning_effort = "low"
+model_reasoning_effort = "medium"
+#model_reasoning_effort = "high"
+#model_reasoning_effort = "xhigh"
+model_verbosity = "low"  # applicable seulement si wire_api="responses"
+#model_verbosity = "medium"
+#model_verbosity = "high"
+#model_reasoning_summary = "none"
+#model_reasoning_summary = "concise"
+#model_reasoning_summary = "detailed"
+model_reasoning_summary = "auto"
+#model_provider = "openai_api"  # provider par défaut
+# Robustesse réseau / surcharge
+#request_max_retries = 2
+#stream_max_retries = 2
+#stream_idle_timeout_ms = 45000
+web_search = "live"   # ou "cached" / "disabled"
+personality = "pragmatic"
+
+[sandbox_workspace_write]
+network_access = true
+
+# ✅ Profils = “model par défaut par provider”
+[profiles.openai]
+model_provider = "openai_api"
+model = "gpt-5.1"
+model_reasoning_effort = "low"
+
+[profiles.socleia]
+model_provider = "socleia"
+#model = "gpt-5.3-codex"
+model_reasoning_effort = "medium"
+network_access=true
+
+[profiles.sgpt]
+model_provider = "sgpt"
+model = "claude-sonnet-4-5"
+
+[model_providers.openai_api]
+name = "OPEN AI APIKEY"
+base_url = "https://api.openai.com/v1"
+env_key = "OPENAI_API_KEY"
+wire_api = "responses"
+
+[model_providers.socleia]
+name = "Groupe SNCF SOCLEIA"
+base_url = "https://socle.ia.sncf.fr"
+#base_url = "https://socle.ia.sncf.fr/v1"
+#base_url = "https://preprod.socle.ia.sncf.fr/"
+env_key = "SOCLEIA_API_KEY"
+wire_api = "responses"
+requires_openai_auth = false
+
+[model_providers.sgpt]
+name = "Groupe SNCF GPT"
+base_url = "https://gpt.sncf.fr/api/gateway"
+env_key = "SGPT_API_KEY"
+#wire_api = "chat"
+#query_params = {}
+
+[mcp_servers.local]
+#url = "http://127.0.0.1:8081/mcp"
+command = "docker"
+args = [
+  "mcp", "gateway", "run",
+  "--catalog", "/home/david/projets/spec2code/full-meta-project/agents/codex/catalog.yaml",
+  "--servers", "github,gitlab,database-server",
+  "--secrets", "/home/david/projets/spec2code/full-meta-project/agents/codex/mcp.secrets.env",
+  "--config", "/home/david/projets/spec2code/full-meta-project/agents/codex/mcp.config.yml"
+]
+startup_timeout_sec = 120
+tool_timeout_sec = 120
+
+[projects."/home/david/projets/spec2code/full-meta-project"]
+trust_level = "trusted"
+
+[projects."/home/david/projets/spec2code/afa-david-sissoko"]
+trust_level = "trusted"
+
+[notice.model_migrations]
+"gpt-5.1" = "gpt-5.3-codex"

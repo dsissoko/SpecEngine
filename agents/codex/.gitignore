@@ -1,0 +1,13 @@
+# Ignorer tout par défaut dans ce dossier
+*
+
+# Mais garder ces fichiers de config
+!config.toml
+!catalog.yaml
+!mcp.config.yml
+!mcp.secrets.env.example
+!README.md
+!CONFIG.md
+
+# (optionnel) garder ce .gitignore
+!.gitignore
