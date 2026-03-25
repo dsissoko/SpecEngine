@@ -23,6 +23,10 @@ Logical pipeline driven by documentation:
 
 > Vision → Product → Design → Plan → Code → Operate
 
+This framework can be used either with a **human orchestrator** or with an
+**AI orchestrator** (or a mix of both). Section **4. Usage** describes these
+two orchestration modes and how they drive the Build / Release / Operate flows.
+
 Core artefact types (see `AGENTS.md` for the formal index):
 
 - `FEAT-…` — Features (product capabilities).  
