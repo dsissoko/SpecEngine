@@ -1,7 +1,8 @@
 # Deployment — Strategy and Targets
 
 ## 1. Deployment Targets
-Describe types of targets:
+Describe types of targets used to deploy `__PROJECT_NAME__`
+for `__ORG_NAME__`:
 - Kubernetes (clusters, namespaces…)
 - Virtual machines
 - Serverless
@@ -50,4 +51,3 @@ Describe:
 - release strategy (canary, blue/green, rolling, …),
 - rollback principles,
 - links to runbooks in `incident_resolution.md`.
-

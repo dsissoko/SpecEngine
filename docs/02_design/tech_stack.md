@@ -1,8 +1,9 @@
-# Tech Stack — Template
+# Tech Stack
 
 ## 1. Global Stack
 
-Describe here the main technologies used by the product, at a high level.
+Describe here the main technologies used by the `__PROJECT_NAME__` product
+at `__ORG_NAME__`, at a high level.
 
 Example (illustrative, adapt to your context):
 
@@ -44,4 +45,3 @@ Recommended format — rows below are illustrative examples:
 | TS-0002 | Backend CI pipeline        | GitLab CI, Maven, SonarQube            | dev, preprod, prod   |       |
 | TS-0003 | Business message broker    | Kafka                                  | dev, preprod, prod   |       |
 | ...     | ...                        | ...                                    | ...                  | ...   |
-

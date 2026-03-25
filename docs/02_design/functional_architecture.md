@@ -1,7 +1,8 @@
 # Functional Architecture
 
 ## Introduction
-This document describes how the system is structured into functional (business) blocks.
+This document describes how the system for `__PROJECT_NAME__`
+is structured into functional (business) blocks for `__ORG_NAME__`.
 
 Each block is responsible for a set of features defined in the
 [general specifications](../01_product/specifications.md).

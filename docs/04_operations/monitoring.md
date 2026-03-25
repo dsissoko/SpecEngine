@@ -1,7 +1,8 @@
 # Monitoring & Observability
 
 ## 1. Objectives
-Describe monitoring and observability goals:
+Describe monitoring and observability goals for `__PROJECT_NAME__`
+at `__ORG_NAME__`:
 - detect incidents quickly,
 - understand system health,
 - support capacity planning and optimisation.
@@ -44,4 +45,3 @@ Describe alerting strategy:
 - alert thresholds,
 - on‑call / rotation rules,
 - alert channels (email, Slack, PagerDuty, …).
-

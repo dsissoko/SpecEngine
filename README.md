@@ -229,6 +229,19 @@ This template can be used with a human in the lead, an AI orchestrator, or a mix
 In all cases, the Build / Release / Operate flows, the artefact index and the mono‑LOT
 Git workflow remain the single reference.
 
+### 4.1 Installation (instantiate the template)
+
+To create a new project from this template, create an empty directory, move into it, then download and run the install script with your own names:
+
+```bash
+mkdir my-service
+cd my-service
+curl -fsSL https://raw.githubusercontent.com/dsissoko/SpecEngine/main/scripts/specengine-new.sh \
+  | bash -s -- "My Service" "Acme Corp"
+```
+
+The script only needs a project name and an organisation name and writes into the current directory. For non-interactive usage, you can add `--yes` before the project name. For advanced usage (custom destination, explicit template URL), run `scripts/specengine-new.sh --help`.
+
 ### 4.1 Human orchestration
 
 - A human product/tech lead fills or adapts the documentation:

@@ -1,7 +1,8 @@
 # Incident Resolution
 
 ## 1. Purpose
-Describe how to handle incidents in production.
+Describe how to handle `__PROJECT_NAME__` incidents in production
+for `__ORG_NAME__`.
 
 ---
 
@@ -49,4 +50,3 @@ Describe:
 - post‑mortem / RCA expectations,
 - follow‑up actions (new LOTs, tech debt, tests),
 - communication to stakeholders.
-

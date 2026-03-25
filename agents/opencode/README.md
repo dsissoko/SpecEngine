@@ -1,8 +1,8 @@
-# agents/opencode — OpenCode Integration (Template)
+# agents/opencode — OpenCode Integration
 
 This directory documents **how to use OpenCode** as an orchestrator
-for this template project. It is intentionally minimal and must be
-adapted per project.
+for this project. It is intentionally minimal and must be adapted
+per project.
 
 ---
 
@@ -77,9 +77,9 @@ describes **where to fetch the business content** to reproduce in that config.
 
 ## 4. Example Happy Path with OpenCode
 
-A minimal scenario for this template could be:
+A minimal scenario for this project could be:
 
-1. Clone this template repo, adapt `docs/00_vision`, `docs/01_product`,
+1. Clone this repository, then adapt `docs/00_vision`, `docs/01_product`,
    `docs/02_design`, `CONVENTIONS.md`, `AGENTS.md`.  
 2. Configure OpenCode with 4 agent profiles matching the roles above.  
 3. Ask the orchestrator profile (e.g. `orchestrator`) to:
@@ -96,7 +96,7 @@ when needed.
 
 ## 5. Location of the OpenCode Config File for this Project
 
-In this template, the project‑specific OpenCode configuration
+In this repository, the project‑specific OpenCode configuration
 for this repo lives under `agents/opencode/`:
 
 - config file (illustrative example):  
@@ -121,4 +121,3 @@ The content of `agents/opencode/opencode.jsonc` provided in this repo
 is an **illustrative example**: it must be completed/extended to define
 actual `orchestrator`, `dev_feature`, `qa` and `infra` profiles
 consistent with `agents/opencode/AGENT_IMPLEMENTATION_opencode.md`.
-

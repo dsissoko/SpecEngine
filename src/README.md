@@ -1,6 +1,7 @@
 # src/
 
-This directory contains the source code produced by the project.
+This directory contains the source code produced by the `__PROJECT_NAME__`
+project for `__ORG_NAME__`.
 
 Its organisation depends on:
 
@@ -10,4 +11,3 @@ Its organisation depends on:
 
 The internal structure can evolve according to the needs
 of the implemented `LS-…` subsystems.
-

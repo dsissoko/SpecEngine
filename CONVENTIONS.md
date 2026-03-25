@@ -1,8 +1,7 @@
 # CONVENTIONS.md — Project Processes and Standards
 
 This file describes the **working processes** and **format/quality standards**
-shared by humans and agents. It is specific to this project, but can be reused
-as a template for other projects.
+shared by humans and agents on the `__PROJECT_NAME__` project for `__ORG_NAME__`.
 
 ---
 

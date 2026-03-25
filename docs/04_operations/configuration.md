@@ -1,7 +1,8 @@
 # Configuration
 
 ## 1. Purpose
-Describe how runtime configuration is managed:
+Describe how runtime configuration of `__PROJECT_NAME__` is managed
+for `__ORG_NAME__`:
 - configuration sources (files, env vars, secrets manager, …)
 - precedence rules
 - environment‑specific overrides.
@@ -43,4 +44,3 @@ Describe how configuration changes are:
 - validated (reviews, approvals),
 - deployed (pipelines, manual steps),
 - rolled back if needed.
-

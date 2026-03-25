@@ -1,8 +1,8 @@
 # Software Architecture
 
 ## Introduction
-This document describes the logical organisation of the system
-into software subsystems.
+This document describes the logical organisation of the `__PROJECT_NAME__`
+system into software subsystems for `__ORG_NAME__`.
 
 It complements:
 - the [functional architecture](./functional_architecture.md)

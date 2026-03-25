@@ -1,6 +1,6 @@
 # AGENTS.md — Local Rules for Infra / IaC
 
-This file complements the root `AGENTS.md`.
+This file complements the root `AGENTS.md` for `__PROJECT_NAME__`.
 It defines strict rules for any infrastructure (`TS-…`) generation or change
 in the `infra/` directory.
 
@@ -97,4 +97,3 @@ These rules apply only to the `infra/` directory.
 
 Other domains (`src/`, documentation, tests) remain governed
 mainly by the root `AGENTS.md`.
-

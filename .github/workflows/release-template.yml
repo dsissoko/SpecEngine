@@ -1,0 +1,42 @@
+name: Build and publish SpecEngine template
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compute version from tag
+        id: meta
+        run: |
+          VERSION="${GITHUB_REF##*/}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create template tarball
+        run: |
+          mkdir -p dist
+          tar czf "dist/specengine-template-${{ steps.meta.outputs.version }}.tar.gz" \
+            AGENTS.md \
+            CONVENTIONS.md \
+            README.md \
+            agents \
+            docs \
+            infra \
+            src \
+            tests
+
+      - name: Create GitHub Release and upload asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.version }}
+          files: dist/specengine-template-${{ steps.meta.outputs.version }}.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

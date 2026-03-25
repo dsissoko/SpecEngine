@@ -1,7 +1,8 @@
 # Delivery Plan
 
 ## 1. Overview
-Describe the main delivery phases and their order.
+Describe the main delivery phases and their order for
+`__PROJECT_NAME__` at `__ORG_NAME__`.
 
 Examples:
 - Phase 1: technical foundation
@@ -51,4 +52,3 @@ Recommended format (table) — rows below are illustrative examples:
 
 Information in this table should guide the structure of the `tests/`
 directory and the design of automated suites.
-

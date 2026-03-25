@@ -1,7 +1,8 @@
 # Specifications — General
 
 ## Introduction
-This document structures the functional specification of the product.
+This document structures the functional specification of the product
+`__PROJECT_NAME__` for `__ORG_NAME__`.
 
 See:
 - [Product](../00_vision/product_brief.md)
@@ -35,4 +36,3 @@ to be replaced with real features:
 |----------|-------------|------------------|----------------------------------------|--------------------------------------|
 | FEAT-0001| Search      | CATALOGUE        | Search a product by criteria           | `features/FEAT-0001_search.md`       |
 | ...      | ...         | ...              | ...                                    | ...                                  |
-
