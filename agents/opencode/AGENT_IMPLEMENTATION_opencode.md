@@ -1,266 +1,266 @@
-# AGENT_IMPLEMENTATION_opencode — Instanciation pour OpenCode
+# AGENT_IMPLEMENTATION_opencode — OpenCode Instantiation
 
-Ce fichier est une **instanciation de `agents/AGENT_IMPLEMENTATION.md` pour OpenCode**.
-Il décrit comment les rôles définis dans `CONVENTIONS.md` sont mappés sur des profils
-OpenCode, avec leurs prompts cœur de métier.
+This file is an **instantiation of `agents/AGENT_IMPLEMENTATION.md` for OpenCode**.
+It describes how the roles defined in `CONVENTIONS.md` are mapped to
+OpenCode profiles, with their core prompts.
 
-Prérequis générique :  
-- OpenCode est installé et disponible dans le `PATH` (voir `agents/opencode/README.md`).  
-- La configuration projet d’OpenCode est lue depuis `agents/opencode/opencode.jsonc`
-  via la variable d’environnement `OPENCODE_CONFIG`.
+Generic prerequisites:  
+- OpenCode is installed and available in the `PATH` (see `agents/opencode/README.md`).  
+- The project OpenCode configuration is read from `agents/opencode/opencode.jsonc`
+  via the `OPENCODE_CONFIG` environment variable.
 
 ---
 
-## 0. Vue d’ensemble — Paramétrer OpenCode pour Full Meta Project
+## 0. Overview — Configuring OpenCode for Full Meta Project
 
-Cette section décrit les étapes à suivre, dans l’ordre, pour rendre OpenCode
-pleinement compatible avec le framework Full Meta Project (FMP).
+This section describes the steps, in order, to make OpenCode fully compatible
+with the Full Meta Project (FMP) framework.
 
-L’objectif est que :
+Goal:
 
-- les rôles définis dans `CONVENTIONS.md` soient correctement instanciés,
-- les agents OpenCode respectent la règle de mono-lot strict,
-- la configuration soit stable, reproductible et exploitable en phase de test.
+- roles defined in `CONVENTIONS.md` are correctly instantiated,
+- OpenCode agents respect the strict mono‑LOT rule,
+- configuration is stable, reproducible and usable in tests.
 
-### Étape 1 — Vérifier les prérequis techniques
+### Step 1 — Check Technical Prerequisites
 
-- OpenCode est installé et accessible dans le `PATH`.
-- Le dépôt respecte la structure FMP (`docs/`, `src/`, `infra/`, `tests/`, `CONVENTIONS.md`, `AGENTS.md`).
-- Les plans par version existent dans `docs/03_realisation/plan_X.Y.md`.
+- OpenCode is installed and accessible in `PATH`.
+- The repo follows the FMP structure (`docs/`, `src/`, `infra/`, `tests/`, `CONVENTIONS.md`, `AGENTS.md`).
+- Per‑version plans exist in `docs/03_delivery/plan_X.Y.md`.
 
-Objectif : s’assurer que l’environnement projet est cohérent avant toute configuration agent.
+Goal: ensure the project environment is coherent before configuring agents.
 
-### Étape 2 — Comprendre le mapping des rôles FMP
+### Step 2 — Understand FMP Role Mapping
 
-Relire :
+Re‑read:
 
 - `CONVENTIONS.md`
 - `AGENTS.md`
 
-Identifier les rôles à instancier dans OpenCode :
+Identify roles to instantiate in OpenCode:
 
-- Orchestrateur
-- Developpeur "Feature & Domaine"
-- Responsable Tests & Qualite (QA/SDET)
-- Responsable Infra & Exploitation (DevOps/SRE)
+- Orchestrator
+- Feature & Domain Developer
+- Tests & Quality Owner (QA/SDET)
+- Infra & Operations Owner (DevOps/SRE)
 
-Objectif : aligner OpenCode sur les roles FMP et non sur une configuration generique.
+Goal: align OpenCode with FMP roles, not a generic configuration.
 
-### Étape 3 — Configurer les profils OpenCode
+### Step 3 — Configure OpenCode Profiles
 
-Créer ou compléter :
+Create or complete:
 
 `agents/opencode/opencode.jsonc`
 
-Déclarer un agent par rôle :
+Declare one agent per role:
 
-- `orchestrateur`
+- `orchestrator`
 - `dev_feature`
 - `qa`
 - `infra`
 
-Pour chacun :
+For each:
 
-- définir le modele (provider / model),
-- définir les outils MCP autorises,
-- injecter le prompt coeur de metier fourni dans ce document.
+- define the model (provider / model),
+- define allowed MCP tools,
+- inject the core prompt provided in this document.
 
-Objectif : faire correspondre 1 rôle FMP = 1 profil OpenCode.
+Goal: enforce 1 FMP role = 1 OpenCode profile.
 
-### Étape 4 — Encadrer le périmètre (mono-lot strict)
+### Step 4 — Constrain Scope (Strict Mono‑LOT)
 
-S’assurer que :
+Ensure that:
 
-- un agent ne travaille que sur un seul `LOT-…` a la fois,
-- les prompts rappellent explicitement cette contrainte,
-- les droits outils sont coherents avec le role (ex : QA n’ecrit pas dans `infra/`).
+- an agent only works on one `LOT-…` at a time,
+- prompts explicitly remind this constraint,
+- tool permissions are consistent with the role (e.g. QA does not write to `infra/`).
 
-Objectif : eviter les derives multi-lot et les conflits documentaires.
+Goal: avoid multi‑LOT drift and documentation conflicts.
 
-### Étape 5 — Activer la configuration projet
+### Step 5 — Activate Project Configuration
 
-Depuis la racine du depot :
+From the repo root:
 
 ```bash
 export OPENCODE_CONFIG="$PWD/agents/opencode/opencode.jsonc"
 ```
 
-Puis lancer :
+Then run:
 
 ```bash
 opencode tui .
 ```
 
-Selectionner le profil correspondant au role souhaite.
+Select the profile matching the desired role.
 
-Objectif : verifier qu’OpenCode charge bien la configuration FMP.
+Goal: verify that OpenCode loads the FMP configuration correctly.
 
-### Étape 6 — Test de cohérence
+### Step 6 — Consistency Test
 
-Avant usage reel :
+Before real use:
 
-- Lancer un LOT test (ex : `LOT-TEST-0001`).
-- Verifier que l’agent :
-  - lit les documents attendus,
-  - respecte le perimetre du LOT,
-  - n’intervient pas hors role,
-  - reference correctement les IDs (`FEAT`, `LS`, `TS`, `LOT`).
+- Run a test LOT (e.g. `LOT-TEST-0001`).
+- Check that the agent:
+  - reads the expected documents,
+  - respects LOT perimeter,
+  - does not act outside its role,
+  - correctly references IDs (`FEAT`, `LS`, `TS`, `LOT`).
 
-Objectif : valider que le parametrage est operationnel.
+Goal: validate that configuration is operational.
 
 ---
 
-## 1. Rôles projet → Profils OpenCode
+## 1. Project Roles → OpenCode Profiles
 
-Rappel des rôles (définis dans `CONVENTIONS.md`) :
-- Orchestrateur  
-- Développeur “Feature & Domaine”  
-- Responsable Tests & Qualité (QA/SDET)  
-- Responsable Infra & Exploitation (DevOps/SRE)
+Role reminder (defined in `CONVENTIONS.md`):
+- Orchestrator  
+- Feature & Domain Developer  
+- Tests & Quality Owner (QA/SDET)  
+- Infra & Operations Owner (DevOps/SRE)
 
-Pour chaque rôle, compléter les éléments suivants dans la configuration OpenCode :
-- **Nom du profil OpenCode** (identifiant du profil côté outil),  
-- **Prompt cœur de métier** (quelques phrases),
-- **Outils MCP** autorisés (FS/Git, CI/CD, etc.).
+For each role, complete the following in OpenCode configuration:
+- **OpenCode profile name** (profile identifier in the tool),  
+- **Core prompt** (a few sentences),
+- **Allowed MCP tools** (FS/Git, CI/CD, etc.).
 
-Les textes ci‑dessous servent de **gabarit** pour ces prompts.
+Texts below serve as **templates** for these prompts.
 
-### 1.1 Profil OpenCode — Développeur “Feature & Domaine”
+### 1.1 OpenCode Profile — Feature & Domain Developer
 
-- Nom de profil OpenCode : à définir (ex. `dev_feature`)  
-- Prompt cœur de métier (gabarit) :
-  - Tu es responsable de l’implémentation des features à partir des artefacts d’entrée du projet.  
-  - Tu lis en priorité :  
-    - `docs/01_produit/specifications.md`, `docs/01_produit/ROADMAP.md`,  
-    - `docs/02_conception/architecture_fonctionnelle.md`, `docs/02_conception/architecture_logicielle.md`,  
-    - `docs/02_conception/stack_technique.md`,  
+- OpenCode profile name: to define (e.g. `dev_feature`)  
+- Core prompt (template):
+  - You are responsible for implementing features from the project input artefacts.  
+  - You primarily read:  
+    - `docs/01_product/specifications.md`, `docs/01_product/ROADMAP.md`,  
+    - `docs/02_design/functional_architecture.md`, `docs/02_design/software_architecture.md`,  
+    - `docs/02_design/tech_stack.md`,  
     - `CONVENTIONS.md`, `AGENTS.md`,  
-    - le LOT courant dans le plan de la version (`docs/03_realisation/plan_X.Y.md`).  
-  - Tu écris ou modifies le code dans `src/` pour les `FEAT-…` et `LS-…` du LOT, en respectant la stack et les normes du projet.  
-  - Tu peux créer des tests unitaires de base pour valider ton code, mais tu ne décides pas seul des stratégies de tests globales.  
-  - Tu ne changes pas la vision produit ni la roadmap ; tu ne modifies pas l’infra ou les pipelines en dehors du périmètre du LOT.
+    - the current LOT in the version plan (`docs/03_delivery/plan_X.Y.md`).  
+  - You write or modify code in `src/` for `FEAT-…` and `LS-…` of the LOT, respecting the stack and project standards.  
+  - You may create basic unit tests to validate your code, but you do not decide global testing strategies alone.  
+  - You do not change product vision or roadmap; you do not modify infra or pipelines outside the LOT scope.
 
-### 1.2 Profil OpenCode — Responsable Tests & Qualité (QA/SDET)
+### 1.2 OpenCode Profile — Tests & Quality Owner (QA/SDET)
 
-- Nom de profil OpenCode : à définir (ex. `qa`)  
-- Prompt cœur de métier (gabarit) :
-  - Tu es responsable de la conception et de la mise à jour des tests automatisés.  
-  - Tu lis en priorité :  
-    - `docs/01_produit/specifications.md`,  
-    - l’ensemble de `docs/02_conception/*`,  
-    - les fichiers `docs/03_realisation/plan_X.Y.md` (stratégie de tests et LOT),  
+- OpenCode profile name: to define (e.g. `qa`)  
+- Core prompt (template):
+  - You are responsible for designing and updating automated tests.  
+  - You primarily read:  
+    - `docs/01_product/specifications.md`,  
+    - all of `docs/02_design/*`,  
+    - files `docs/03_delivery/plan_X.Y.md` (test strategy and LOTs),  
     - `CONVENTIONS.md`, `AGENTS.md`.  
-  - Tu crées ou adaptes des tests dans `tests/` (unitaires, intégration, contrat) pour les `FEAT-…` et `LS-…` du LOT.  
-  - Tu t’assures que les comportements métier importants décrits dans la doc sont couverts par des tests.  
-  - Tu ne conçois pas de nouvelles fonctionnalités et tu ne modifies pas la stack technique ni l’infra.
+  - You create or adapt tests in `tests/` (unit, integration, contract) for `FEAT-…` and `LS-…` of the LOT.  
+  - You ensure that important business behaviours described in the docs are covered by tests.  
+  - You do not design new features and you do not change the tech stack or infra.
 
-### 1.3 Profil OpenCode — Responsable Infra & Exploitation (DevOps/SRE)
+### 1.3 OpenCode Profile — Infra & Operations Owner (DevOps/SRE)
 
-- Nom de profil OpenCode : à définir (ex. `infra`)  
-- Prompt cœur de métier (gabarit) :
-  - Tu es responsable de l’infrastructure, des pipelines et des aspects run / exploitation.  
-  - Tu lis en priorité :  
-    - `docs/02_conception/architecture_technique.md`,  
-    - `docs/02_conception/stack_technique.md`,  
-    - `docs/04_exploitation/*`,  
+- OpenCode profile name: to define (e.g. `infra`)  
+- Core prompt (template):
+  - You are responsible for infrastructure, pipelines and run/operations aspects.  
+  - You primarily read:  
+    - `docs/02_design/technical_architecture.md`,  
+    - `docs/02_design/tech_stack.md`,  
+    - `docs/04_operations/*`,  
     - `CONVENTIONS.md`, `AGENTS.md`,  
-    - le LOT courant dans le plan de la version (`docs/03_realisation/plan_X.Y.md`).  
-  - Tu crées ou modifies les artefacts techniques (`TS-…`) correspondants dans `infra/` et dans les fichiers CI/CD.  
-  - Tu aides au diagnostic d’incidents et aux rollbacks, toujours en t’appuyant sur les docs d’exploitation.  
-  - Tu ne modifies pas la logique métier applicative ; tu ne changes pas la vision produit ni la roadmap.
+    - the current LOT in the version plan (`docs/03_delivery/plan_X.Y.md`).  
+  - You create or modify corresponding technical artefacts (`TS-…`) in `infra/` and CI/CD files.  
+  - You help diagnose incidents and rollbacks, always relying on operations docs.  
+  - You do not modify application business logic; you do not change product vision or roadmap.
 
-### 1.4 Profil OpenCode — Orchestrateur
+### 1.4 OpenCode Profile — Orchestrator
 
-- Nom de profil OpenCode : à définir (ex. `orchestrateur`)  
-- Prompt cœur de métier (gabarit) :
-  - Tu coordonnes le travail sur ce dépôt en t’appuyant sur la documentation et les conventions du projet.  
-  - Tu lis en priorité :  
+- OpenCode profile name: to define (e.g. `orchestrator`)  
+- Core prompt (template):
+  - You coordinate work on this repository based on project documentation and conventions.  
+  - You primarily read:  
     - `CONVENTIONS.md`, `AGENTS.md`,  
-    - `docs/01_produit/ROADMAP.md`,  
-    - l’ensemble de `docs/02_conception/*`,  
-    - les fichiers `docs/03_realisation/plan_X.Y.md`.  
-  - Tu crées et mets à jour les `LOT-…` dans le plan de la version concernée (`docs/03_realisation/plan_X.Y.md`) à partir de la roadmap, des demandes et des besoins d’ops.  
-  - Tu décides quels LOT exécuter, dans quel ordre, et quel profil d’agent doit être mobilisé pour chaque LOT.  
-  - Tu déclenches la création des branches Git de LOT, des PR et des tags de release selon le processus défini dans `CONVENTIONS.md` (§1.3).  
-  - Tu ne modifies pas directement le code applicatif ou l’infra : tu délègues aux agents spécialisés via les LOT.
+    - `docs/01_product/ROADMAP.md`,  
+    - all of `docs/02_design/*`,  
+    - files `docs/03_delivery/plan_X.Y.md`.  
+  - You create and update `LOT-…` entries in the plan for the relevant version (`docs/03_delivery/plan_X.Y.md`) from the roadmap, requests and ops needs.  
+  - You decide which LOTs to execute, in which order, and which agent profile should be used for each LOT.  
+  - You trigger creation of LOT Git branches, PRs and release tags according to the process in `CONVENTIONS.md` (§1.3).  
+  - You do not modify application code or infra directly: you delegate to specialised agents via LOTs.
 
 ---
 
-## 2. Mise en place concrète dans OpenCode
+## 2. Concrete Setup in OpenCode
 
-Cette section décrit **précisément quels fichiers manipuler** pour brancher
-les rôles ci‑dessus dans OpenCode pour ce projet.
+This section describes **exactly which files to modify** to wire
+the roles above into OpenCode for this project.
 
-1. Depuis la racine du dépôt, vérifier que le fichier de config projet existe :
+1. From the repo root, check that the project config file exists:
 
    ```bash
    ls agents/opencode/opencode.jsonc
    ```
 
-   - S’il n’existe pas, créer un fichier `agents/opencode/opencode.jsonc`
-     en partant de l’exemple illustratif fourni dans ce template.
+   - If it does not exist, create `agents/opencode/opencode.jsonc`
+     starting from the illustrative example provided in this template.
 
-2. Ouvrir `agents/opencode/opencode.jsonc` et définir, dans la clé racine
-   `agents`, **un agent par rôle** :
+2. Open `agents/opencode/opencode.jsonc` and define, under the root
+   `agents` key, **one agent per role**:
 
-   - `orchestrateur`
+   - `orchestrator`
    - `dev_feature`
    - `qa`
    - `infra`
 
-   Chaque entrée doit au minimum préciser (structure exacte à adapter à la
-   version d’OpenCode) :
+   Each entry should at least specify (exact structure depends on
+   the OpenCode version):
 
-   - le **modèle** à utiliser (provider / model),
-   - les **outils** autorisés (FS, Git, shell…),
-   - le **prompt cœur de métier**, soit inline, soit en faisant référence
-     à ce fichier comme source (en copiant/collant les paragraphes ci‑dessus).
+   - the **model** to use (provider / model),
+   - **tools** allowed (FS, Git, shell…),
+   - the **core prompt**, either inline or by copying from this file.
 
-   Le contenu actuel de `opencode.jsonc` est un **exemple illustratif** qui
-   doit être complété pour devenir une configuration opérationnelle.
+   The current `opencode.jsonc` content is an **illustrative example** that
+   must be completed to become an operational configuration.
 
-3. Exporter la variable d’environnement `OPENCODE_CONFIG` pour que
-   OpenCode utilise cette configuration projet :
+3. Export `OPENCODE_CONFIG` so that OpenCode uses this project config:
 
    ```bash
-   cd /chemin/vers/full-meta-project
+   cd /path/to/full-meta-project
    export OPENCODE_CONFIG="$PWD/agents/opencode/opencode.jsonc"
    ```
 
-4. Lancer OpenCode depuis la racine du projet et choisir le **profil**
-   correspondant au rôle souhaité (nom de l’agent dans la clé `agents`) :
+4. Run OpenCode from the project root and choose the **profile**
+   corresponding to the desired role (agent name under `agents` key):
 
    ```bash
    opencode tui .
    ```
 
-   ou, si la version d’OpenCode le permet, en sélectionnant directement
-   le profil (`orchestrateur`, `dev_feature`, `qa`, `infra`) dans l’interface.
+   Or, if supported, by directly selecting the profile (`orchestrator`,
+   `dev_feature`, `qa`, `infra`) in the UI.
 
-5. Lorsque tu ajoutes un nouveau rôle dans `CONVENTIONS.md`, tu dois :
+5. When you add a new role in `CONVENTIONS.md`, you must:
 
-   - ajouter son prompt cœur de métier dans ce fichier,
-   - ajouter l’agent correspondant dans `agents/opencode/opencode.jsonc`.
+   - add its core prompt in `agents/AGENT_IMPLEMENTATION.md`,
+   - add the corresponding agent in `agents/opencode/opencode.jsonc`.
 
-Ainsi, `AGENT_IMPLEMENTATION_opencode.md` fixe **le contenu métier** des rôles
-et `agents/opencode/opencode.jsonc` fixe **la configuration technique** d’OpenCode
-pour ce dépôt.
+Thus, `AGENT_IMPLEMENTATION_opencode.md` defines **role business content**,
+and `agents/opencode/opencode.jsonc` defines **technical OpenCode config**
+for this repo.
 
 ---
 
-## 3. Outils MCP / intégrations OpenCode (à compléter)
+## 3. MCP Tools / OpenCode Integrations (to Complete)
 
-À adapter selon ton environnement, mais au minimum :
+Adapt to your environment, but at minimum:
 
-- Un outil de **fichiers / Git local** permettant de lire/écrire dans  
-  `docs/`, `src/`, `infra/`, `tests/` et de gérer branches/commits/PR.  
-- Éventuellement un outil de **CI/CD** pour déclencher les pipelines de build/deploy.  
+- A **files / local Git** tool to read/write  
+  `docs/`, `src/`, `infra/`, `tests/` and manage branches/commits/PRs.  
+- Optionally a **CI/CD** tool to trigger build/deploy pipelines.  
 
-Pour chaque profil (Dev, QA, Infra, Orchestrateur), préciser dans la
-configuration OpenCode :
-- quels outils MCP il peut utiliser,  
-- sur quels répertoires et types d’actions (lecture seule, lecture/écriture, Git…).  
+For each profile (Dev, QA, Infra, Orchestrator), specify in
+OpenCode configuration:
+- which MCP tools it can use,  
+- on which directories and with which types of actions
+  (read‑only vs read/write, Git operations, …).
 
-Ce fichier ne décrit pas en détail le format technique de la config OpenCode :
-il fixe le **contenu métier** à y reporter et la **localisation** de la
-configuration projet (`agents/opencode/opencode.jsonc`).
+This file does not describe the detailed OpenCode config format:
+it sets the **business content** to mirror there and the **location**
+of the project configuration (`agents/opencode/opencode.jsonc`).
+

@@ -1,217 +1,262 @@
 # Template de projet orienté agents
 
-## 1. Vision haut niveau
+## 1. High‑Level Vision
 
-Ce dépôt est un **gabarit de projet** pensé pour le développement piloté par
-la spécification, utilisable par des humains et des agents (IA).
+This repository is a **project template** designed for specification‑driven
+development, usable by humans and AI agents.
 
-Principaux fichiers et répertoires :
+Main files and directories:
 
-- `docs/` : documentation produit et technique structurée par phases :
-  - `00_vision/` : vision, cadrage, contexte.
-  - `01_produit/` : spécification fonctionnelle (`specifications.md`) et roadmap (`ROADMAP.md`).
-  - `02_conception/` : conception fonctionnelle, logicielle, technique, modèle de données, stack technique.
-  - `03_realisation/plan_X.Y.md` : plans par version avec lots (`LOT-…`) et stratégie de tests.
-  - `04_exploitation/` : déploiement, configuration, supervision, incidents.
-- `CONVENTIONS.md` : processus de travail + normes de forme/qualité communes au projet.
-- `AGENTS.md` : constitution des agents (comment lire `docs/`, utiliser `FEAT/BF/LS/TS/LOT`, etc.).
-- `src/` : code applicatif.
-- `infra/` : infrastructure as code et configuration CI/CD.
-- `tests/` : suites de tests automatisés.
+- `docs/`: product and technical documentation structured by phase:
+  - `00_vision/`: vision, scoping, context.
+  - `01_product/`: functional specification (`specifications.md`) and roadmap (`ROADMAP.md`).
+  - `02_design/`: functional, software and technical design, data model, tech stack.
+  - `03_delivery/plan_X.Y.md`: per‑version plans with batches (`LOT-…`) and testing strategy.
+  - `04_operations/`: deployment, configuration, monitoring, incidents.
+- `CONVENTIONS.md`: working processes + common format/quality standards.
+- `AGENTS.md`: agent constitution (how to read `docs/`, use `FEAT/BF/LS/TS/LOT`, etc.).
+- `src/`: application code.
+- `infra/`: infrastructure as code and CI/CD configuration.
+- `tests/`: automated test suites.
 
-Pipeline logique porté par la doc :
+Logical pipeline driven by documentation:
 
-> Vision → Produit → Conception → Plan → Code → Run
+> Vision → Product → Design → Plan → Code → Operate
 
-Les artefacts clés (exemples : `FEAT-…`, `BF-…`, `LS-…`, `TS-…`, `LOT-…`) sont décrits dans
-`docs/` et `CONVENTIONS.md`, et servent d’entrées structurées aux humains comme aux agents.
+This framework can be used either with a **human orchestrator** or with an
+**AI orchestrator** (or a mix of both). Section **4. Usage** describes these
+two orchestration modes and how they drive the Build / Release / Operate flows.
+
+Core artefact types (see `AGENTS.md` for the formal index):
+
+- `FEAT-…` — Features (product capabilities).  
+- `BF-…` — Business (functional) blocks.  
+- `LS-…` — Logical software subsystems.  
+- `TS-…` — Technical artefacts (clusters, pipelines, brokers, …).  
+- `IF-BF-…` — Functional interfaces between `BF` blocks.  
+- `IF-LS-…` — Software interfaces between `LS` subsystems.  
+- `IF-TS-…` — Technical interfaces (channels, endpoints, topics…) linked to `TS`.  
+- `LOT-…` — Delivery batches grouping FEAT/LS/TS for a given version.
+
+The framework requires **every artefact to be explicitly typed** with one of
+these IDs, and the documentation (`docs/01_product`, `docs/02_design`,
+`docs/03_delivery`, `docs/04_operations`) to maintain an **exhaustive index
+of all artefacts of the target service**, across **Build**, **Release**
+and **Operate** activities. Managing this index is **mandatory**:
+no artefact may be created or changed without being properly referenced
+in the right view.
+
+This index is distributed per activity:
+
+- product view (`docs/01_product`) → FEAT and roadmap entries per version,  
+- functional view (`docs/02_design/functional_architecture.md`) → BF and `IF-BF-…`,  
+- software view (`docs/02_design/software_architecture.md`) → LS and `IF-LS-…`,  
+- technical / operations view (`docs/02_design/technical_architecture.md`, `docs/04_operations/*`) → TS and `IF-TS-…`, deployment/config/monitoring/incident procedures,  
+- delivery view (`docs/03_delivery/plan_X.Y.md`) → LOT and their FEAT/LS/TS/IF-* scope per version and per batch.
+
+These typed artefacts and their index are described in `docs/` and
+`CONVENTIONS.md`, and serve as structured inputs for both humans and agents
+at every step of the Build / Release / Operate flows.
 
 ---
 
-## 2. Structure documentaire & artefacts
+## 2. Documentation Structure & Artefacts
 
 - **00_vision**  
-  - `brief.md` : vision, promesse, positionnement.  
-  - `note_cadrage.md` : objectifs, contexte, contraintes.
+  - `product_brief.md`: vision, value proposition, positioning.  
+  - `project_scoping_note.md`: objectives, context, constraints.
 
-- **01_produit**  
-  - `specifications.md` : acteurs, concepts métier, FEAT (`FEAT-…`).  
-  - `ROADMAP.md` : vue produit par version (`X.Y`) et FEAT associées.  
-  - `features/*.md` : détails par feature.
+- **01_product**  
+  - `specifications.md`: actors, business concepts, FEAT (`FEAT-…`).  
+  - `ROADMAP.md`: product view by version (`X.Y`) and associated FEAT.  
+  - `features/*.md`: per‑feature details.
 
-- **02_conception**  
-  - `architecture_fonctionnelle.md` : blocs fonctionnels (`BF-…`) + interfaces fonctionnelles.  
-  - `architecture_logicielle.md` : sous-systèmes logiciels (`LS-…`) + interfaces logicielles.  
-  - `architecture_technique.md` : artefacts techniques (`TS-…`) + interfaces techniques.  
-  - `stack_technique.md` : stack globale et par `LS`/`TS`.  
-  - `modele_donnees.md` : structure des données
-  - `c4/` : répertoire optionnel dédié au design logiciel format C4 model
+- **02_design**  
+  - `functional_architecture.md`: business/functional blocks (`BF-…`) + functional interfaces.  
+  - `software_architecture.md`: logical subsystems (`LS-…`) + software interfaces.  
+  - `technical_architecture.md`: technical artefacts (`TS-…`) + technical interfaces.  
+  - `tech_stack.md`: global stack and per‑`LS`/`TS` stack.  
+  - `data_model.md`: data structures.  
+  - `c4/`: optional directory dedicated to C4‑model software design.
 
-- **03_realisation**  
-  - `plan_X.Y.md` : pour chaque version `X.Y`, lots (`LOT-…`), versions `X.Y.Z`, criticité, stratégie de tests.
+- **03_delivery**  
+  - `plan_X.Y.md`: for each version `X.Y`, batches (`LOT-…`), versions `X.Y.Z`, criticality, testing strategy.
 
-- **04_exploitation**  
-  - `deploiement.md` : cibles, environnements, pipelines.  
-  - `configuration.md`, `security.md`, `supervision.md`, `resolution_incidents.md`.
+- **04_operations**  
+  - `deployment.md`: targets, environments, pipelines.  
+  - `configuration.md`, `security.md`, `monitoring.md`, `incident_resolution.md`.
 
 - **CONVENTIONS.md**  
-  - Processus généraux (doc → plan → implémentation → tests)  
-  - 8 cas d’usage process (feature, bug, infra, release, incident, rollback, etc.).  
-  - Rôles (Orchestrateur, Dev, QA, Infra/Exploitation) et normes de forme.
+  - General processes (docs → plan → implementation → tests).  
+  - 8 process use cases (feature, bug, infra, release, incident, rollback, etc.).  
+  - Roles (Orchestrator, Dev, QA, Infra/Operations) and formatting standards.
 
 - **AGENTS.md**  
-  - Comment les agents lisent `docs/` et `CONVENTIONS.md`.  
-  - Comment ils utilisent `FEAT/BF/LS/TS/LOT` en pratique.
+  - How agents read `docs/` and `CONVENTIONS.md`.  
+  - How they use `FEAT/BF/LS/TS/LOT` in practice.
 
 ---
 
-## 3. Activité 1 — Construire / mettre à jour le cadre (Humain lead, Agent support)
+## 3. Processes — Overview
 
-Objectif : poser ou ajuster les artefacts d’entrée qui serviront ensuite aux agents
-et à l’orchestrateur pour produire le code, les tests et l’infra.
+Project activities are organised into three main flows:
 
-- **1. Vision / Cadrage (HUMAIN)**  
-  - Compléter `docs/00_vision/brief.md` (vision, promesse, positionnement).  
-  - Compléter `docs/00_vision/note_cadrage.md` (objectifs, contexte, contraintes).
+- **Build** (create and evolve the product)
+  - Vision → clarify the “why” and the context.  
+  - Product → describe features (`FEAT-…`) and the roadmap.  
+  - Design → structure the system into `BF` / `LS` / `TS` and interfaces (`IF-*`).  
+  - Plan → organise the work into `LOT-…` per version (`plan_X.Y.md`).  
+  - Code → implement the LOT artefacts in `src/` and `tests/`.  
 
-- **2. Spécification produit (HUMAIN, AGENT en assistance possible)**  
-  - Décrire les acteurs, concepts métier et grandes fonctionnalités dans
-    `docs/01_produit/specifications.md`.  
-  - Créer les premières features avec des IDs `FEAT-…` et, si besoin,
-    des fichiers `docs/01_produit/features/*.md`.
+- **Release** (promote build artefacts into deployable releases)
+  - Select → choose a candidate version `vX.Y.Z` produced by the Build flow.  
+  - Qualify → ensure it meets quality / performance / security / compliance criteria.  
+  - Schedule → decide where and when to roll it out (environments, strategy).  
+  - Approve → formally approve the release for operations (can map to a `LOT-REL-…`).  
 
-- **3. Roadmap par version (HUMAIN)**  
-  - Définir les versions macro `X.Y` et les capacités/FEAT associées
-    dans `docs/01_produit/ROADMAP.md`.
+- **Operate** (run and manage an approved release)
+  - Provision → create / update technical artefacts (`TS-…`) and base infrastructure.  
+  - Deploy → deploy an approved release (`vX.Y.Z`) to environments.  
+  - Configure → apply and adjust runtime configuration (settings, secrets, feature flags).  
+  - Observe → monitor health and behaviour (metrics, logs, traces, alerts, dashboards).  
+  - Recover → investigate incidents and apply fixes or rollbacks, typically via dedicated `LOT-OPS-…` batches.
 
-- **4. Conception (HUMAIN, AGENT en assistance possible)**  
-  - Définir les blocs fonctionnels (`BF-…`) dans
-    `docs/02_conception/architecture_fonctionnelle.md`.  
-  - Définir les sous-systèmes logiciels (`LS-…`) et leurs interactions dans
-    `docs/02_conception/architecture_logicielle.md`.  
-  - Décrire l’architecture technique et les artefacts (`TS-…`) dans
-    `docs/02_conception/architecture_technique.md`.  
-  - Définir la stack technique globale et par `LS`/`TS` dans
-    `docs/02_conception/stack_technique.md`.  
-  - Compléter `docs/02_conception/modele_donnees.md` et, si besoin, `docs/02_conception/c4/`.
 
-- **5. Processus, normes et constitution (HUMAIN)**  
-  - Relire et adapter `CONVENTIONS.md` aux pratiques du projet
-    (processus Git, qualité, style, types de tests, 8 cas d’usage process).  
-  - Relire `AGENTS.md` et l’ajuster si nécessaire pour :
-    - préciser comment les agents doivent lire `docs/`,
-    - expliquer comment utiliser les artefacts (`FEAT`, `BF`, `LS`, `TS`, `LOT`),
-    - décrire la façon d’endosser les rôles définis dans `CONVENTIONS.md`.
+  ```mermaid
+  stateDiagram-v2
+      [*] --> Build
 
-À l’issue de cette activité, les artefacts d’entrée pour les agents sont en place :
-`docs/00_vision`, `docs/01_produit`, `docs/02_conception`, `CONVENTIONS.md`, `AGENTS.md`.
+      state Build {
+          [*] --> Vision
+
+          Vision --> Product: Product vision clarified
+          Product --> Design: FEAT-… identified / ROADMAP drafted
+          Design --> Plan: BF / LS / TS / IF-* structured
+          Plan --> Code: LOT-… defined in plan_X.Y.md
+          Code --> [*]: Release candidate vX.Y.Z built & tagged\n(tests OK)
+
+          %% Evolution loops inside Build
+          Product --> Vision: Strategy / scope change
+          Design --> Product: New FEAT / constraints
+          Plan --> Design: Architecture / scope adjustment
+          Code --> Plan: Re-plan required (scope or risk)
+      }
+
+      %% Exit from Build to the Release flow
+      Build --> Release: Release candidate vX.Y.Z
+  ```
+
+```mermaid
+stateDiagram-v2
+    [*] --> Release
+
+    %% Release belongs to the separate Build/Release flow
+
+    state Operate {
+        [*] --> Provision
+
+        Provision --> Deploy: Infra (TS-…) ready for vX.Y.Z
+        Deploy --> Configure: Release vX.Y.Z deployed
+        Configure --> Observe: Runtime config applied
+
+        Observe --> Recover: Incident / degradation detected
+
+        %% Recover without new build
+        Recover --> Observe: Rollback / config / infra fix only
+
+        %% End of life
+        Observe --> [*]: Service decommissioned
+    }
+
+    %% Entry into Operate for an approved release
+    Release --> Operate: Approved release vX.Y.Z
+
+    %% Recover that requires a new build/release
+    Recover --> Release: New fixed release vX.Y.Z+1\nfrom Build/Release
+
+    %% Normal evolution without incident
+    Observe --> Release: New release vX.Y+1 approved
+    Observe --> Provision: Infra change required (scale, new TS-…)
+```
+
+### 3.1 Details — Build & Operate Activities
+
+The tables below summarise the main activities, artefacts and entry points
+for each flow. They will be the reference for simplifying or removing
+the detailed “Activité …” sections once fully stabilised.
+
+**Build flow — from Vision to Code**
+
+| Phase    | Purpose                                            | Input artefacts                                      | Output artefacts                                      | Main roles                    |
+|----------|----------------------------------------------------|------------------------------------------------------|-------------------------------------------------------|-------------------------------|
+| Vision   | Clarify why the product exists and its context     | External context, strategy, constraints, existing `docs/00_vision/product_brief.md` and `project_scoping_note.md` | Updated `docs/00_vision/product_brief.md` and `project_scoping_note.md` with clarified vision/scoping | Product / Stakeholders (Human) |
+| Product  | Describe actors, business concepts and FEAT        | Vision docs, existing `docs/01_product/specifications.md` and `ROADMAP.md` | Updated `docs/01_product/specifications.md`, `ROADMAP.md`, created/updated `FEAT-…` and roadmap entries (`X.Y`) | Product, Domain, Orchestrator |
+| Design   | Structure the system into BF / LS / TS and IF-*    | Vision + Product docs, existing design docs in `docs/02_design/*` | Updated `docs/02_design/functional_architecture.md`, `software_architecture.md`, `technical_architecture.md`, `tech_stack.md`, `data_model.md`, created/updated `BF-…`, `LS-…`, `TS-…`, `IF-BF/IF-LS/IF-TS`, initial skeletons of `docs/04_operations/deployment.md`, `configuration.md`, `monitoring.md`, `incident_resolution.md`, `security.md` | Architect, Dev, Orchestrator  |
+| Plan     | Organise work into delivery batches per version    | Roadmap (`X.Y`), existing `BF-…` / `LS-…` / `TS-…` / `IF-*` definitions from `docs/02_design/*`, existing `docs/03_delivery/plan_X.Y.md` | Updated `docs/03_delivery/plan_X.Y.md`, with `LOT-…` and their FEAT/LS/TS/IF-* scope | Orchestrator                  |
+| Code     | Implement behaviour and local tests for the LOT    | `LOT-…`, design docs (BF/LS/TS/IF-*), tech stack, codebase and CI pipeline | Code in `src/`, tests in `tests/`, updated CI config if needed, release candidate `vX.Y.Z` and associated release tags in Git | Dev, QA (with Orchestrator)   |
+
+**Operate flow — from approved release to day‑to‑day operations**
+
+| Phase      | Purpose                                              | Input artefacts                                      | Output artefacts                                     | Main roles              |
+|------------|------------------------------------------------------|------------------------------------------------------|------------------------------------------------------|-------------------------|
+| Provision  | Prepare / update technical artefacts and infra       | `TS-…` definitions, tech stack, release requirements, existing `docs/02_design/technical_architecture.md`, `tech_stack.md`, `docs/04_operations/deployment.md` | Updated `docs/04_operations/deployment.md`, updated `TS-…` topology (clusters, pipelines, brokers…), infra definitions under `infra/` | Infra / Ops (DevOps/SRE) |
+| Deploy     | Deploy an approved release `vX.Y.Z` to environments  | Approved release `vX.Y.Z`, deployment topology, CI/CD configuration, `docs/04_operations/deployment.md` | Deployed release instances, rollout history, updated deployment procedures in `docs/04_operations/deployment.md` | Infra / Ops, Orchestrator |
+| Configure  | Apply and adjust runtime configuration               | Deployed release, config policies, security rules, existing `docs/04_operations/configuration.md` and security guidelines | Runtime config (config files, env vars, secrets, flags), updated `docs/04_operations/configuration.md` and security rules | Infra / Ops, App owners   |
+| Observe    | Monitor health, performance and usage                | Running system, SLO/SLA targets, existing `docs/04_operations/monitoring.md` | Metrics, logs, traces, dashboards, updated observability runbooks in `docs/04_operations/monitoring.md` | Ops, SRE, Product        |
+| Recover    | Handle incidents and rollbacks via `LOT-OPS-…`       | Incident reports/symptoms, telemetry, current config, existing `docs/04_operations/incident_resolution.md`, `security.md` | `LOT-OPS-…`, fixes/rollbacks applied, updated incident runbooks and security procedures, incident records and post‑mortems | Ops, Dev, QA, Orchestrator |
+
+At each step, these docs are not only inputs but **outputs of work**:
+
+- `docs/03_delivery/plan_X.Y.md` is produced and refined by the Plan phase in Build.  
+- Files under `docs/04_operations` are produced and refined as Operate activities
+  (Provision, Deploy, Configure, Observe, Recover) are performed and improved over time.
+
+All artefacts managed in this repository — documentation (`docs/*`), plans,
+code, tests, infra (`infra/`), agent configs (`agents/`) — are subject to the
+same lifecycle:
+
+- any change must be done in a dedicated Git branch (per LOT or per coherent change),  
+- that branch is reviewed via a PR/MR,  
+- and only then merged into the main branch and included in the next release tag.
+
+There is no “out of band” change: updating a plan, an operations procedure or
+an infra file is treated exactly like changing application code.
 
 ---
 
-## 4. Activité 2 — Exécuter le plan par LOT (Orchestrateur + Agents)
+## 4. Usage
 
-Objectif : à partir des artefacts d’entrée, permettre à l’orchestrateur et aux agents
-de produire le plan de réalisation, le code, les tests et l’infra.
+This template can be used with a human in the lead, an AI orchestrator, or a mix of both.  
+In all cases, the Build / Release / Operate flows, the artefact index and the mono‑LOT
+Git workflow remain the single reference.
 
-- **1. Construire / mettre à jour le plan de version — Orchestrateur**  
-  - Lire `docs/01_produit/ROADMAP.md` et `docs/02_conception/*`.  
-  - Créer ou ajuster le fichier de plan de la version visée
-    (`docs/03_realisation/plan_X.Y.md`) :
-    - définir des `LOT-…` (1 LOT = 1 process principal parmi les 8 définis dans `CONVENTIONS.md`),  
-    - rattacher chaque LOT à une version SemVer `X.Y.Z`,  
-    - préciser le périmètre (`FEAT`, et éventuellement `BF`/`LS`/`TS`) et la criticité.
+### 4.1 Human orchestration
 
-- **2. Implémentation par LOT — Agents (Dev / QA / DevOps) + validation humaine au besoin**  
-  - À partir d’un LOT donné :
-    - Agent “Feature & Domaine” : écrit/modifie le code dans `src/` pour les `FEAT` du lot.  
-    - Agent “Tests & Qualité” : crée/met à jour les tests dans `tests/` selon le plan.  
-    - Agent “Infra & Exploitation” : adapte `infra/` et les pipelines si des `TS-…` sont concernés.  
-  - L’équipe humaine peut relire/valider les MR/PR générées par les agents.
+- A human product/tech lead fills or adapts the documentation:
+  - `docs/00_vision`, `docs/01_product`, `docs/02_design`, `CONVENTIONS.md`, `AGENTS.md`.
+- For a target version `X.Y`, the lead creates or updates `docs/03_delivery/plan_X.Y.md`
+  and defines `LOT-…` with their FEAT/LS/TS/IF-* scope and criticality.
+- For each active LOT, the lead:
+  - creates a dedicated Git branch (`lot/X.Y.Z-XXX`),  
+  - implements the required changes in `src/`, `tests/`, `infra/`,  
+  - keeps the artefact index up to date in `docs/*`.
+- CI/CD and releases are configured so that tags `vX.Y.Z` trigger pipelines, deploy
+  candidates and releases, using `docs/04_operations/*` as the reference for operations.
 
-- **3. Exploitation et releases — Orchestrateur + Infra/Exploitation**  
-  - Utiliser `docs/04_exploitation/*` pour organiser :
-    - le déploiement par environnement,  
-    - la préparation des releases,  
-    - le diagnostic d’incidents et les rollbacks (via des LOT dédiés).
+### 4.2 Agent orchestration
 
-Une fois ces deux activités en place, le projet est prêt pour un développement
-piloté par la spécification, avec une frontière claire :
-- l’activité 1 est majoritairement humaine (les agents assistent),
-- l’activité 2 peut être largement automatisée par l’orchestrateur et les sous-agents.
-
----
-
-## 5. Activité 3 — Run & Ops (Incidents, bugs, rollback)
-
-Objectif : gérer les problèmes en production tout en restant aligné avec la roadmap
-et le plan.
-
-- Toute demande d’ops (incident, bug en prod, rollback) est transformée par
-  l’Orchestrateur en `LOT-OPS-…` dans le plan de la version concernée
-  (`docs/03_realisation/plan_X.Y.md`) :
-  - version impactée (`X.Y.Z`),
-  - périmètre minimal (`TS-…`), complété en `LS`/`FEAT` au fil du diagnostic,
-  - process principal choisi parmi les 8 définis dans `CONVENTIONS.md`.
-- Les rôles Infra/Exploitation, Dev et QA interviennent sur ce LOT pour :
-  - diagnostiquer, corriger, tester, éventuellement rollback,
-  - puis, si besoin, créer de nouveaux LOT d’évolution/ durcissement.
-
----
-
-## 6. Modes d’utilisation possibles
-
-Ce template supporte plusieurs niveaux d’automatisation :
-
-- **Mode A — Dev assistés en local**  
-  - Infra minimale (ex. `docker-compose.yml`), pas de CI/CD obligatoire.  
-  - Agents principalement utilisés pour générer le code (`src/`), les tests (`tests/`)
-    et les fichiers de run local.  
-  - L’humain lance les conteneurs et tests en local.
-
-- **Mode B — Full CI/CD agentique**  
-  - Premier LOT orienté IaC/pipeline pour mettre en place `infra/` et la CI/CD.  
-  - LOTs suivants pour les features/bugs, exécutés par les agents Dev/QA/DevOps.  
-  - Les PR générées par les agents sont validées par un humain, déclenchant
-    des déploiements de Release Candidates puis de releases.
-
-Chaque projet peut préciser dans `CONVENTIONS.md` jusqu’où il va
-dans l’automatisation et quels rôles restent systématiquement humains.
-
----
-
-## 7. Happy paths (exemples)
-
-### 7.1 Happy path “dev assistés local”
-
-1. Un humain remplit `docs/00_vision`, `docs/01_produit`, `docs/02_conception`,
-   adapte `CONVENTIONS.md` et `AGENTS.md`.  
-2. L’Orchestrateur crée les premiers `LOT-…` pour v0.1 dans `docs/03_realisation/plan_0.1.md`
-   (fichier de plan de version, sur le modèle de `plan_X.Y.md`).  
-3. L’Orchestrateur crée une branche Git pour le LOT actif
-   (ex. `lot/0.1.0-001` pour `LOT-001`), conformément au processus Git mono-LOT
-   décrit dans `CONVENTIONS.md` (§1.3).  
-4. Les agents Dev/QA génèrent le code, les tests et un `docker-compose` permettant
-   de tout exécuter en local.  
-5. L’humain lance les tests et valide le résultat.
-
-### 7.2 Happy path “full CI/CD avec issues GitHub/GitLab”
-
-1. Le cadre (`docs/00→02`, `CONVENTIONS`, `AGENTS`) est en place.  
-2. Un humain ouvre une issue du type :
-   > “@orchestrateur, analyse la roadmap et propose un plan pour la version 0.1”
-3. L’Orchestrateur lit la roadmap, crée les `LOT-…` correspondants dans
-   `docs/03_realisation/plan_0.1.md` (exemple de `plan_X.Y.md`),
-   et ouvre une PR avec ce plan.  
-4. Après validation humaine, l’Orchestrateur :
-   - crée pour chaque LOT une branche Git dédiée
-     (ex. `lot/0.1.0-001`, `lot/0.1.0-002`), en suivant `CONVENTIONS.md` (§1.3),  
-   - y rattache les commits et PR correspondants.  
-5. Ensuite, l’Orchestrateur :
-   - crée un LOT d’infra/pipeline (v0.1.0) et une PR `infra/`+CI/CD,  
-   - puis des LOTs de features.  
-6. Les agents Dev/QA/Infra implémentent chaque LOT → PRs code/tests/infra.  
-7. À chaque merge, les pipelines CI/CD déploient des Release Candidates, puis
-   des releases, selon les règles définies dans `docs/04_exploitation`.
-
-L’intégration avec GitHub/GitLab se fait via les issues et PR, mais la structure
-documentaire (docs + CONVENTIONS + AGENTS + LOTs) reste indépendante de l’outil.
+- An “orchestrator” agent (e.g. Codex) is configured with this repository and instructed to:
+  - always read `README.md`, `AGENTS.md`, `CONVENTIONS.md` first,  
+  - respect the closed list of artefact types and the Build / Release / Operate FSMs,  
+  - maintain the artefact index in `docs/01_product`, `docs/02_design`,
+    `docs/03_delivery`, `docs/04_operations`,  
+  - work mono‑LOT and propose, rather than execute, Git commands (branch, commit, tag).
+- Typical interaction pattern:
+  1. The user states the flow and step, e.g.  
+     “Flow Build / step Design for version 0.1: apply what the README describes.”  
+  2. The agent identifies the current FSM state, lists the impacts on `docs/*`,
+     `src/`, `tests/`, `infra/`, then applies the changes.  
+  3. The agent outputs the Git commands to run on the LOT branch and a PR/MR summary
+     describing the changes and the updated artefact index.
+- Higher‑level platforms (GitHub/GitLab, issue trackers, CI/CD) remain optional glue
+  around this core: the structure (docs + CONVENTIONS + AGENTS + LOTs) is tool‑agnostic.

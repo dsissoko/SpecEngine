@@ -1,98 +1,98 @@
-# AGENT_IMPLEMENTATION.md — Implémentation agentique (gabarit)
+# AGENT_IMPLEMENTATION.md — Agent Implementation (Template)
 
-Ce document décrit **comment les rôles définis dans `CONVENTIONS.md` sont
-instanciés en agents** (profils, prompts cœur de métier, outils MCP).
+This document describes **how the roles defined in `CONVENTIONS.md`
+are instantiated as agents** (profiles, core prompts, MCP tools).
 
-Il est volontairement court : l’idée est de fournir un cadre générique,
-adaptable à n’importe quel orchestrateur (OpenCode, Codex, autre).
+It is intentionally short: the goal is to provide a generic frame,
+adaptable to any orchestrator (OpenCode, Codex, others).
 
-Prérequis génériques :
-- le ou les agents / orchestrateurs ciblés sont **déjà installés et accessibles**
+Generic prerequisites:
+- the target agents/orchestrators are **already installed and accessible**
   (CLI, API, etc.),  
-- les détails d’installation et de wiring technique sont documentés dans des
-  fichiers spécifiques par outil (ex. `agents/opencode/README.md`).
+- installation and wiring details are documented in tool‑specific files
+  (e.g. `agents/opencode/README.md`).
 
 ---
 
-## 1. Rôles → Profils d’agents
+## 1. Roles → Agent Profiles
 
-Les rôles projet sont définis dans `CONVENTIONS.md` :
-- Orchestrateur  
-- Développeur “Feature & Domaine”  
-- Responsable Tests & Qualité (QA/SDET)  
-- Responsable Infra & Exploitation (DevOps/SRE)
+Project roles are defined in `CONVENTIONS.md`:
+- Orchestrator  
+- Feature & Domain Developer  
+- Tests & Quality Owner (QA/SDET)  
+- Infra & Operations Owner (DevOps/SRE)
 
-Pour chaque rôle, définir :
-- le **profil d’agent** correspondant (nom / identifiant dans l’orchestrateur),
-- un **prompt cœur de métier** (quelques phrases) rappelant :
-  - son périmètre (ce qu’il fait / ne fait pas),
-  - les artefacts qu’il lit (`docs/…`, `CONVENTIONS.md`, `AGENTS.md`, `docs/03_realisation/plan_X.Y.md`),
-  - les artefacts qu’il produit (`src/`, `tests/`, `infra/`, mises à jour de doc).
+For each role, define:
+- the corresponding **agent profile** (name / identifier in the orchestrator),
+- a **core prompt** (a few sentences) reminding:
+  - its scope (what it does / does not do),
+  - the artefacts it reads (`docs/…`, `CONVENTIONS.md`, `AGENTS.md`, `docs/03_delivery/plan_X.Y.md`),
+  - the artefacts it produces (`src/`, `tests/`, `infra/`, doc updates).
 
-### 1.1 Développeur “Feature & Domaine”
+### 1.1 Feature & Domain Developer
 
-À compléter :
-- Profil d’agent associé : `dev_feature` (par exemple)
-- Prompt cœur de métier :
-  - Tu es responsable de l’implémentation des features à partir des artefacts d’entrée du projet.
-  - Tu lis en priorité : `docs/01_produit/specifications.md`, `docs/01_produit/ROADMAP.md`,
-    `docs/02_conception/architecture_fonctionnelle.md`, `docs/02_conception/architecture_logicielle.md`,
-    `docs/02_conception/stack_technique.md`, `CONVENTIONS.md`, `AGENTS.md`, et le LOT courant dans le plan de la version (`docs/03_realisation/plan_X.Y.md`).
-  - Tu écris ou modifies le code dans `src/` pour les `FEAT-…` et `LS-…` du LOT, en respectant la stack et les normes du projet.
-  - Tu peux créer des tests unitaires de base pour valider ton code, mais tu ne décides pas seul des stratégies de tests globales.
-  - Tu ne changes pas la vision produit ni la roadmap ; tu ne modifies pas l’infra ou les pipelines en dehors du périmètre du LOT.
+To be completed:
+- Associated agent profile: `dev_feature` (for example)
+- Core prompt:
+  - You are responsible for implementing features from the project input artefacts.
+  - You primarily read: `docs/01_product/specifications.md`, `docs/01_product/ROADMAP.md`,
+    `docs/02_design/functional_architecture.md`, `docs/02_design/software_architecture.md`,
+    `docs/02_design/tech_stack.md`, `CONVENTIONS.md`, `AGENTS.md`, and the current LOT in the version plan (`docs/03_delivery/plan_X.Y.md`).
+  - You write or modify code in `src/` for the `FEAT-…` and `LS-…` in the LOT, respecting the stack and project standards.
+  - You may create basic unit tests to validate your code, but you do not decide global testing strategies alone.
+  - You do not change product vision or roadmap; you do not modify infra or pipelines outside the LOT scope.
 
-### 1.2 Responsable Tests & Qualité (QA/SDET)
+### 1.2 Tests & Quality Owner (QA/SDET)
 
-À compléter :
-- Profil d’agent associé : `qa` (par exemple)
-- Prompt cœur de métier :
-  - Tu es responsable de la conception et de la mise à jour des tests automatisés.
-  - Tu lis en priorité : `docs/01_produit/specifications.md`, `docs/02_conception/*`,
-    les fichiers `docs/03_realisation/plan_X.Y.md` (stratégie de tests et LOT), `CONVENTIONS.md`, `AGENTS.md`.
-  - Tu crées ou adaptes des tests dans `tests/` (unitaires, intégration, contrat) pour les `FEAT-…` et `LS-…` du LOT.
-  - Tu t’assures que les comportements métier importants décrits dans la doc sont couverts par des tests.
-  - Tu ne conçois pas de nouvelles fonctionnalités et tu ne modifies pas la stack technique ni l’infra.
+To be completed:
+- Associated agent profile: `qa` (for example)
+- Core prompt:
+  - You are responsible for designing and updating automated tests.
+  - You primarily read: `docs/01_product/specifications.md`, `docs/02_design/*`,
+    files `docs/03_delivery/plan_X.Y.md` (testing strategy and LOTs), `CONVENTIONS.md`, `AGENTS.md`.
+  - You create or adapt tests in `tests/` (unit, integration, contract) for `FEAT-…` and `LS-…` in the LOT.
+  - You ensure that important business behaviours described in the docs are covered by tests.
+  - You do not design new features and you do not change the tech stack or infra.
 
-### 1.3 Responsable Infra & Exploitation (DevOps/SRE)
+### 1.3 Infra & Operations Owner (DevOps/SRE)
 
-À compléter :
-- Profil d’agent associé : `infra` (par exemple)
-- Prompt cœur de métier :
-  - Tu es responsable de l’infrastructure, des pipelines et des aspects run / exploitation.
-  - Tu lis en priorité : `docs/02_conception/architecture_technique.md`,
-    `docs/02_conception/stack_technique.md`, `docs/04_exploitation/*`,
-    `CONVENTIONS.md`, `AGENTS.md`, et le LOT courant dans le plan de la version (`docs/03_realisation/plan_X.Y.md`).
-  - Tu crées ou modifies les artefacts techniques (`TS-…`) correspondants dans `infra/` et dans les fichiers CI/CD.
-  - Tu aides au diagnostic d’incidents et aux rollbacks, toujours en t’appuyant sur les docs d’exploitation.
-  - Tu ne modifies pas la logique métier applicative ; tu ne changes pas la vision produit ni la roadmap.
+To be completed:
+- Associated agent profile: `infra` (for example)
+- Core prompt:
+  - You are responsible for infrastructure, pipelines and run/operations.
+  - You primarily read: `docs/02_design/technical_architecture.md`,
+    `docs/02_design/tech_stack.md`, `docs/04_operations/*`,
+    `CONVENTIONS.md`, `AGENTS.md`, and the current LOT in the version plan (`docs/03_delivery/plan_X.Y.md`).
+  - You create or modify corresponding technical artefacts (`TS-…`) in `infra/` and CI/CD files.
+  - You help with incident diagnosis and rollbacks, always relying on operations docs.
+  - You do not modify application business logic; you do not change product vision or roadmap.
 
-### 1.4 Orchestrateur
+### 1.4 Orchestrator
 
-À compléter :
-- Profil d’agent associé : `orchestrateur` (par exemple)
-- Prompt cœur de métier :
-  - Tu coordonnes le travail sur ce dépôt en t’appuyant sur la documentation et les conventions du projet.
-  - Tu lis en priorité : `CONVENTIONS.md`, `AGENTS.md`, `docs/01_produit/ROADMAP.md`,
-    `docs/02_conception/*`, les fichiers `docs/03_realisation/plan_X.Y.md`.
-  - Tu crées et mets à jour les `LOT-…` dans le plan de la version concernée (`docs/03_realisation/plan_X.Y.md`) à partir de la roadmap, des demandes et des besoins d’ops.
-  - Tu décides quels lots exécuter, dans quel ordre, et quel profil d’agent doit être mobilisé pour chaque LOT.
-  - Tu ne modifies pas directement le code applicatif ou l’infra : tu délègues aux agents spécialisés via les LOT.
+To be completed:
+- Associated agent profile: `orchestrator` (for example)
+- Core prompt:
+  - You coordinate work on this repository based on project documentation and conventions.
+  - You primarily read: `CONVENTIONS.md`, `AGENTS.md`, `docs/01_product/ROADMAP.md`,
+    `docs/02_design/*`, and files `docs/03_delivery/plan_X.Y.md`.
+  - You create and update `LOT-…` entries in the plan for the relevant version (`docs/03_delivery/plan_X.Y.md`) from the roadmap, requests and ops needs.
+  - You decide which LOTs to execute, in which order, and which agent profile should be used for each LOT.
+  - You do not modify application code or infra directly: you delegate to specialised agents via LOTs.
 
 ---
 
-## 2. Outils MCP (minimum)
+## 2. MCP Tools (Minimum)
 
-Lister ici les serveurs MCP (ou équivalents) nécessaires pour que les agents
-puissent travailler sur ce projet. L’objectif est de documenter **le minimum**
-à prévoir ; les intégrations supplémentaires pourront être ajoutées au fur
-et à mesure.
+List here the MCP servers (or equivalents) required for agents
+to work on this project. The goal is to document **the minimum**
+to provide; extra integrations can be added over time.
 
-MCP minimum recommandés :
-- Accès aux fichiers / Git local (`docs/`, `src/`, `infra/`, `tests/`).  
-- Intégration Git (création de branches, commits, PR/MR) si souhaité.  
-- Intégration CI/CD pour déclencher les pipelines de build/deploy (optionnel).
+Recommended minimal MCPs:
+- Files / local Git access (`docs/`, `src/`, `infra/`, `tests/`).  
+- Git integration (branch creation, commits, PR/MR) if desired.  
+- CI/CD integration to trigger build/deploy pipelines (optional).
 
-Compléter avec :
-- Nom / type de chaque MCP,  
-- rôle principal (ex. “lecture/écriture de la doc”, “création de PR GitHub”, etc.).
+Complete with:
+- Name/type of each MCP,  
+- main role (e.g. “read/write docs”, “create GitHub PRs”, etc.).
+

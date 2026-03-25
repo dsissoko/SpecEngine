@@ -1,11 +1,13 @@
 # src/
 
-Ce répertoire contient les sources produites par le projet.
+This directory contains the source code produced by the project.
 
-Son organisation dépend :
+Its organisation depends on:
 
-- de la stack technique retenue,
-- du contexte métier,
-- des sous-systèmes définis dans la documentation.
+- the chosen tech stack,
+- the business context,
+- the subsystems defined in the documentation.
 
-La structure interne peut évoluer selon les besoins des `LS-…` implémentés.
+The internal structure can evolve according to the needs
+of the implemented `LS-…` subsystems.
+

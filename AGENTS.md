@@ -1,117 +1,133 @@
-# AGENTS.md — Contrat pour les agents (humains et IA)
+# AGENTS.md — Contract for Agents (Humans and AI)
 
-## 1. Objectif
+## 1. Purpose
 
-Ce fichier joue le rôle de **constitution pour les agents** qui travaillent
-sur ce dépôt (humains ou IA).
+This file is the **constitution for the agents** working on this repository
+(humans and AI).
 
-- Les **processus de travail** et les **normes de forme/qualité** communes
-  sont décrits dans `CONVENTIONS.md`.
-- Les **spécifications produit et conception** sont dans `docs/` et constituent
-  la **source de vérité** fonctionnelle et technique.
-- L’implémentation concrète de l’équipe d’agents (orchestrateur choisi,
-  profils d’agents, outils MCP, modèles) est documentée dans
-  `agents/AGENT_IMPLEMENTATION.md` (à adapter pour ce projet).
-- `AGENTS.md` décrit la façon dont les agents doivent exploiter ces artefacts
-  pour produire du code (`src/`), de l’infra (`infra/`) et des tests (`tests/`),
-  en respectant les conventions du projet.
-
----
-
-## 2. Priorités et zones protégées
-
-- Ne pas modifier `docs/00_vision` et `docs/01_produit` sans validation humaine explicite.
-- Toujours lire :
-  - `docs/01_produit/specifications.md` pour comprendre les features (`FEAT-xxxx`),
-  - `docs/02_conception/*` pour comprendre les blocs, sous-systèmes et interfaces.
-- Ne jamais supprimer ou renommer un fichier dans `docs/` sans adapter
-  les liens et la structure documentaire.
+- The **working processes** and **format/quality standards** are described in
+  `CONVENTIONS.md`.
+- The **product and design specifications** live in `docs/` and are the
+  **functional and technical source of truth**.
+- The concrete implementation of the agent team (chosen orchestrator,
+  agent profiles, MCP tools, models) is documented in
+  `agents/AGENT_IMPLEMENTATION.md` (to be adapted for this project).
+- `AGENTS.md` explains how agents must use these artefacts to produce
+  code (`src/`), infrastructure (`infra/`) and tests (`tests/`),
+  while respecting the project conventions.
+- Agents are also responsible for **maintaining the artefact index**:
+  at every step of Build / Release / Operate, any new or updated
+  `FEAT`, `BF`, `LS`, `TS`, `IF-*` or `LOT` must be properly referenced
+  in the corresponding documentation files under `docs/`.
 
 ---
 
-## 3. Conventions d’identifiants
+## 2. Priorities and Protected Areas
 
-Les identifiants suivants doivent être utilisés et considérés comme stables :
-
-- Features : `FEAT-0001`, `FEAT-0002`, … (déclarées dans `specifications.md`).
-- Blocs fonctionnels : `BF-…` (dans `architecture_fonctionnelle.md`).
-- Sous-systèmes logiques : `LS-…` (dans `architecture_logicielle.md`).
-- Sous-systèmes / artefacts techniques : `TS-…` (dans `architecture_technique.md` et `docs/04_exploitation`).
-- Lots de réalisation : `LOT-…` (dans `docs/03_realisation/plan_X.Y.md`).
-- Interfaces : `IF-<type>-NNNN`
-  - `IF-BF-…` : interfaces fonctionnelles entre blocs fonctionnels (`BF-…`)
-  - `IF-LS-…` : interfaces logicielles entre sous-systèmes (`LS-…`)
-  - `IF-TS-…` : interfaces techniques (canaux, endpoints, topics, etc.)
-
-Un agent doit **réutiliser** ces IDs dans le code, les scripts d’infra et les tests
-(ex. noms de dossiers, de modules, de jobs CI).
+- Do not modify `docs/00_vision` and `docs/01_product` without explicit human approval.
+- Always read:
+  - `docs/01_product/specifications.md` to understand features (`FEAT-xxxx`),
+  - `docs/02_design/*` to understand functional blocks, subsystems and interfaces.
+- Never delete or rename a file in `docs/` without updating links
+  and the documentation structure.
 
 ---
 
-## 3bis. Liste fermée des types autorisés (verrouillage)
+## 3. Identifier Conventions
 
-Les seuls types d’artefacts autorisés dans le projet sont :
+The following identifiers must be used and considered stable:
+
+- Features: `FEAT-0001`, `FEAT-0002`, … (declared in `specifications.md`).
+- Functional blocks: `BF-…` (in `functional_architecture.md`).
+- Logical subsystems: `LS-…` (in `software_architecture.md`).
+- Technical subsystems / technical artefacts: `TS-…`
+  (in `technical_architecture.md` and `docs/04_operations`).
+- Functional interfaces: `IF-BF-…` (in functional architecture views).
+- Software interfaces: `IF-LS-…` (in software architecture views).
+- Technical interfaces: `IF-TS-…` (in technical architecture views).
+- Delivery batches: `LOT-…` (in `docs/03_delivery/plan_X.Y.md`).
+
+Agents **must reuse** these IDs in code, infra scripts and tests
+(e.g. folder names, modules, CI job names).
+
+---
+
+## 3bis. Closed List of Allowed Types (Locking)
+
+The only artefact types allowed in the project are:
 
 - `FEAT`
 - `BF`
 - `LS`
 - `TS`
-- `IF`
+- `IF-BF`
+- `IF-LS`
+- `IF-TS`
 - `LOT`
 
-Cette liste est **fermée**.
+This list is **closed**.
 
-Il est interdit d’introduire tout nouveau type ou sous-type, y compris mais sans
-se limiter à : `TS-only`, `TECH`, `INFRA`, `BACKEND`, `FRONT`, `FEAT+TS`, etc.
+It is forbidden to introduce any new type or subtype, including but not limited to:
+`TS-only`, `TECH`, `INFRA`, `BACKEND`, `FRONT`, `FEAT+TS`, `IF-OPS`, etc.
 
-La nature d’un élément est exclusivement déterminée par son identifiant.
-Aucun champ supplémentaire de typage n’est autorisé.
-
----
-
-## 4. Conventions de nommage pour le code
-
-Le code doit, autant que possible, refléter la structure documentaire :
-
-- Organisation par sous-systèmes / blocs :
-  - `src/<sous-systeme>/...` où `<sous-systeme>` dérive de l’ID logique (`LS-SERVICE-CATALOGUE` → `service_catalogue`).
-- Lien avec les features :
-  - Les noms de modules / classes peuvent référencer l’ID feature
-    (ex. `feature_FEAT_0001_recherche.py`).
-- Lien avec les interfaces :
-  - Les adaptateurs / endpoints peuvent inclure l’ID d’interface
-    (ex. `if_ls_0001_public_api.ts` pour une interface logicielle).
-
-Ces conventions visent à faciliter la navigation pour un agent qui partirait
-des documents vers le code.
+The nature of an element is determined **only** by its identifier.
+No extra “type” field is allowed.
 
 ---
 
-## 5. Process recommandé pour un agent IA
+## 4. Naming Conventions for Code
 
-1. Lire `docs/00_vision` et `docs/01_produit/specifications.md` pour comprendre le produit et les features.
-2. Lire `docs/02_conception/*` pour identifier :
-   - blocs fonctionnels (`BF-…`),
-   - sous-systèmes logiques (`LS-…`),
-   - sous-systèmes / artefacts techniques (`TS-…`),
-   - interfaces (`IF-BF-…`, `IF-LS-…`, `IF-TS-…`).
-3. Lire le plan de la version concernée (`docs/03_realisation/plan_X.Y.md`) pour connaître les lots (`LOT-…`) et la stratégie de tests.
-4. Lire `docs/04_exploitation/*` pour comprendre :
-   - cibles de déploiement et composants techniques (`TS-…`),
-   - pipelines et jobs d’automatisation (`TS-…`),
-   - exigences d’exploitation.
-5. Ne générer du code / infra / tests que **dans le périmètre explicitement demandé**,
-   en respectant les IDs et la structure existante.
+Code should reflect the documentation structure as much as possible:
+
+- Organisation by subsystems / blocks:
+  - `src/<subsystem>/...` where `<subsystem>` is derived from the logical ID
+    (`LS-SERVICE-CATALOGUE` → `service_catalogue`).
+- Link with features:
+  - Module / class names may reference the feature ID
+    (e.g. `feature_FEAT_0001_search.py`).
+- Link with interfaces:
+  - Adapters / endpoints may include the interface ID
+    (e.g. `if_ls_0001_public_api.ts` for a software interface).
+
+These conventions aim to make it easy for an agent to navigate
+from the documents to the code.
 
 ---
 
-## 5bis. Formalisme minimal de la roadmap et des LOT
+## 5. Recommended Workflow for an AI Agent
 
-### Roadmap (`docs/01_produit/ROADMAP.md`)
+1. Read `docs/00_vision` and `docs/01_product/specifications.md`
+   to understand the product and features.
+2. Read `docs/02_design/*` to identify:
+   - functional blocks (`BF-…`),
+   - logical subsystems (`LS-…`),
+   - technical subsystems / artefacts (`TS-…`),
+   - functional interfaces (`IF-BF-…`),
+   - software interfaces (`IF-LS-…`),
+   - technical interfaces (`IF-TS-…`).
+3. Read the plan for the relevant version (`docs/03_delivery/plan_X.Y.md`)
+   to understand the batches (`LOT-…`) and the testing strategy.
+4. Read `docs/04_operations/*` to understand:
+   - deployment targets and technical components (`TS-…`),
+   - pipelines and automation jobs (`TS-…`),
+   - run/operations requirements.
+5. Generate code / infra / tests **only within the explicitly requested scope**,
+   reusing existing IDs and structure.
+6. Whenever the work creates or changes an artefact (`FEAT`, `BF`, `LS`,
+   `TS`, `IF-*`, `LOT`, or an operations procedure), update the relevant
+   index location in `docs/01_product`, `docs/02_design`, `docs/03_delivery`
+   or `docs/04_operations` so that the global artefact index stays complete
+   and consistent.
 
-Format autorisé :
+---
 
-```
+## 5bis. Minimal Formalism for Roadmap and LOTs
+
+### Roadmap (`docs/01_product/ROADMAP.md`)
+
+Allowed format:
+
+```md
 ## vX.Y
 
 FEAT:
@@ -124,90 +140,116 @@ TS:
 - TS-0001
 ```
 
-Règles :
+Rules:
 
-- Seuls les blocs `FEAT`, `LS`, `TS` sont autorisés.
-- Chaque entrée doit référencer un identifiant existant.
-- Aucun champ libre (ex : `Type`, `Category`, `Scope`) n’est autorisé.
-- Aucune interprétation implicite n’est autorisée.
+- Only `FEAT`, `LS`, `TS` blocks are allowed.
+- Each entry must reference an existing identifier.
+- No free-form fields are allowed (e.g. `Type`, `Category`, `Scope`).
+- No implicit interpretation is allowed.
 
 ---
 
-### LOT (`docs/03_realisation/plan_X.Y.md`)
+### LOT (`docs/03_delivery/plan_X.Y.md`)
 
-Format autorisé :
+Allowed format:
 
-```
+```md
 # Plan vX.Y
 
 ## LOT-0001
 
-Contenu:
+Content:
 - FEAT-0001
 - LS-0001
 - TS-0001
 - IF-LS-0001
 ```
 
-Règles :
+Rules:
 
-- Un LOT est exclusivement une liste d’identifiants.
-- Aucun champ `Type` n’est autorisé.
-- Aucun champ de catégorisation supplémentaire n’est autorisé.
-- Un LOT ne peut contenir que des identifiants existants.
+- A LOT is exclusively a list of identifiers.
+- No `Type` field is allowed.
+- No extra categorisation field is allowed.
+- A LOT may only contain existing identifiers.
 
-Règle de calcul :
+Computation rule:
 
-Un LOT contient exactement les identifiants référencés dans la roadmap pour la
-version correspondante.
+A LOT contains exactly the identifiers referenced in the roadmap
+for the corresponding version.
 
-L’agent ne doit jamais :
+The agent must never:
 
-- déduire un type de LOT,
-- enrichir un LOT avec des concepts non présents dans la roadmap,
-- introduire une catégorie intermédiaire.
+- infer a type for a LOT,
+- enrich a LOT with concepts not present in the roadmap,
+- introduce an intermediate category.
 
----
+Additional rule for interfaces:
 
-## 6. Gestion des informations incomplètes lors d’un LOT
-
-Lors de la mise en œuvre d’un `LOT`, si les informations présentes dans les
-`FEAT`, `LS` ou `TS` ne permettent pas d’implémenter le lot sans introduire
-un nouvel élément structurel (nouveau service, nouvelle infrastructure,
-nouvelle technologie, nouvelle API), l’agent peut refuser d’exécuter le lot.
-
-Dans ce cas :
-
-1. L’agent identifie explicitement l’artefact incomplet.
-2. Il précise l’information manquante ou ambiguë.
-3. Aucune hypothèse structurante n’est autorisée.
-4. Le complément doit être intégré dans l’artefact concerné avant reprise.
-
-Les imprécisions locales ou réversibles ne doivent pas bloquer l’exécution.
+- A given diagram or table must only contain interface IDs
+  from **one** interface type at a time (`IF-BF`, `IF-LS` or `IF-TS`).
+- Mixing several interface types in the same diagram/table is forbidden
+  to avoid ambiguity for agents.
 
 ---
 
-## 6. Validation et tests
+## 6. Handling Incomplete Information When Executing a LOT
 
-- Pour toute évolution de code, l’agent doit :
-  - identifier les tests à adapter / créer à partir des fichiers `docs/03_realisation/plan_X.Y.md`,
-  - privilégier les tests unitaires et d’intégration pour les changements locaux,
-  - ajouter / mettre à jour les tests de contrat pour toute interface modifiée.
+When implementing a `LOT`, if the information present in the
+`FEAT`, `LS` or `TS` artefacts does not allow implementation
+without introducing a new structural element (new service,
+new infrastructure, new technology, new API), the agent may
+refuse to execute the LOT.
+
+In that case:
+
+1. The agent explicitly identifies the incomplete artefact.
+2. The agent specifies which information is missing or ambiguous.
+3. No structural assumption is allowed.
+4. The missing information must be added to the relevant artefact
+   before resuming execution.
+
+Local or reversible ambiguities must not block execution.
 
 ---
 
-## 7. Usage des artefacts d’entrée par type
+## 6. Validation and Tests
 
-Ce tableau résume comment exploiter chaque type d’artefact pour produire du code, de l’infra
-ou des tests.
+For any code change, the agent must:
 
-| Artefact d’entrée | Contenu minimal du catalogue | Utilisation principale par l’agent | Artefacts de sortie surtout impactés |
-|-------------------|-----------------------------|------------------------------------|--------------------------------------|
-| `FEAT-…` (Feature) | ID, nom, description fonctionnelle simple, lien vers la spec détaillée, `LS` cible | Savoir **quoi** implémenter et **dans quel sous-système** coder | Code applicatif (`src/`), tests liés (`tests/`), petites docs techniques locales |
-| `BF-…` (Bloc fonctionnel) | ID, description du domaine, vocabulaire métier, entités typiques | Comprendre le **contexte métier commun** à plusieurs features, parler le bon langage, ne pas mélanger les domaines | Influence la structure du code de domaine, les noms, les cas de test métier (peu d’artefacts dédiés) |
-| `LS-…` (Sous-système logiciel) | ID, rôle, techno/framework, mapping vers `src/…`, interactions LS↔LS autorisées | Savoir **où** implémenter, avec quelles techno, et quelles dépendances logicielles sont autorisées | Organisation de `src/`, services/modules, adapters, wiring, tests d’intégration entre services |
-| `TS-…` (Artefact technique) | ID, type (cluster, pipeline, broker, …), rôle/scope, mapping vers `infra/` ou CI/CD | Générer / mettre à jour l’IaC, la config d’exécution, les pipelines ; comprendre les contraintes d’exécution | Fichiers `infra/…`, configs runtime, fichiers CI/CD, scripts d’exploitation |
-| Lignes d’interface dans `BF` | Producteur / consommateur (`BF`), besoin métier, exemples de données | Raffiner le comportement métier des échanges entre domaines, inspirer les scénarios de tests bout‑en‑bout | Scénarios métier complets, tests E2E, doc fonctionnelle des échanges |
-| Lignes d’interface dans `LS` | Source / cible (`LS`), type d’appel (HTTP, message…), lien vers spec formelle | Définir les contrats entre services (APIs, messages), guider la création de handlers, DTO, tests de contrat | Endpoints, DTO/ports, clients, tests de contrat, specs OpenAPI/AsyncAPI |
-| Lignes d’interface dans `TS` | Canal (URL, topic, file…), parties techniques concernées, contraintes QoS/sécurité | Matérialiser les canaux techniques (routes, topics, queues), guider la config réseau / broker | Config réseau, ingress, topics/queues, paramètres de performance/sécurité |
-| `LOT-…` (Lot de réalisation) | ID de lot, liste de `FEAT` (et éventuellement `LS`/`TS`) concernés, objectif, criticité | Ordonner le travail : définir quelles `FEAT`/`LS`/`TS` traiter ensemble et dans quel ordre | Découpage du backlog, organisation des branches/MR, stratégie de tests par lot |
+- identify which tests to adapt / create based on
+  `docs/03_delivery/plan_X.Y.md`,
+- favour unit and integration tests for local changes,
+- add / update contract tests for any modified interface.
+
+
+## 7. How to Use Each Artefact Type (Input / Output)
+
+The table below summarises, for each artefact type, how it is used
+as an **input** and which artefacts it typically **creates or updates**
+as an output (including possibly the same type).
+
+| Input artefact      | Minimal catalogue content                                                   | Main usage by the agent                                                    | Output artefacts (created or updated)                                       |
+|---------------------|----------------------------------------------------------------------------|----------------------------------------------------------------------------|------------------------------------------------------------------------------|
+| `FEAT-…` (Feature)  | ID, name, simple functional description, link to detailed spec, target `LS` | Know **what** to implement and **in which subsystem** to write code        | Application code (`src/`), related tests (`tests`), small local tech docs, updated feature docs |
+| `BF-…` (Business block) | ID, domain description, business vocabulary, typical entities          | Understand the **business context shared** by several features, speak the right language, avoid mixing domains | Influences domain code structure, naming, business test cases, updated domain glossary/docs |
+| `LS-…` (Logical subsystem) | ID, role, tech/framework, mapping to `src/…`, allowed LS↔LS interactions | Know **where** to implement, with which tech, and which dependencies are allowed | Organisation of `src/`, services/modules, adapters, wiring, integration tests, updated LS documentation |
+| `TS-…` (Technical artefact) | ID, type (cluster, pipeline, broker, …), role/scope, mapping to `infra/` or CI/CD | Generate / update IaC, runtime config, pipelines; understand runtime constraints | `infra/…` files, runtime configs, CI/CD files, operations scripts, updated TS documentation |
+| `IF-BF-…` (Functional interface) | ID, producer/consumer (`BF`), business need, data examples     | Refine the business behaviour of cross‑domain exchanges, inspire end‑to‑end scenarios | Full business scenarios, E2E tests, functional docs for exchanges, updated interface specs |
+| `IF-LS-…` (Software interface)   | ID, source/target (`LS`), call type (HTTP, message…), link to formal spec | Define service contracts (APIs, messages), guide creation of handlers, DTOs, contract tests | Endpoints, DTOs/ports, clients, contract tests, OpenAPI/AsyncAPI specs, updated interface specs |
+| `IF-TS-…` (Technical interface)  | ID, channel (URL, topic, file…), technical parties, QoS/security constraints | Materialise technical channels (routes, topics, queues), guide network/broker config | Network config, ingress, topics/queues, performance/security parameters, updated interface specs |
+| `LOT-…` (Delivery batch) | Batch ID, list of affected `FEAT` (and optionally `LS`/`TS`), goal, criticality | Order the work: define which `FEAT`/`LS`/`TS` to handle together and in which order | Backlog slicing, branch/MR organisation, batch-based testing strategy, updated version plan (`docs/03_delivery/plan_X.Y.md`)       |
+
+An artefact type can therefore appear both as an input and
+as part of the outputs when it is refined or corrected.
+
+All artefacts managed in this repository (documentation in `docs/*`,
+plans, code, tests, infra under `infra/`, agent configuration under
+`agents/`, etc.) are versioned and released through Git:
+
+- any change must go through a dedicated branch,  
+- that branch is reviewed via PR/MR,  
+- and only then merged into the main branch and included in a release tag.
+
+The detailed Git workflow (mono‑LOT, happy path, tag usage) is specified
+in `CONVENTIONS.md` and the high‑level process flows are documented
+in `README.md` (§3).
