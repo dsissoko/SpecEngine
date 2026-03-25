@@ -1,9 +1,11 @@
 # tests/
 
-Ce répertoire contient :
+This directory contains:
 
-- les stratégies de tests,
-- les plans de test,
-- les résultats des tests.
+- test strategies,
+- test plans,
+- test results.
 
-Il regroupe les éléments permettant de valider les `FEAT-…`, `LS-…` et interfaces du projet.
+It groups all artefacts used to validate project `FEAT-…`, `LS-…`
+and interfaces.
+

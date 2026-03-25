@@ -1,99 +1,100 @@
-# AGENTS.md — Règles locales Infra / IaC
+# AGENTS.md — Local Rules for Infra / IaC
 
-Ce fichier complète le `AGENTS.md` racine.
-Il définit les règles strictes applicables à toute génération ou modification
-d’infrastructure (`TS-…`) dans le répertoire `infra/`.
-
----
-
-## 1. Principe fondamental
-
-L’infrastructure est un domaine à fort impact.
-
-En conséquence :
-
-- Aucune hypothèse implicite n’est autorisée.
-- Aucune valeur par défaut n’est autorisée.
-- Toute information structurante manquante entraîne un arrêt.
+This file complements the root `AGENTS.md`.
+It defines strict rules for any infrastructure (`TS-…`) generation or change
+in the `infra/` directory.
 
 ---
 
-## 2. Pré‑requis obligatoires pour toute IaC
+## 1. Fundamental Principle
 
-Avant de générer ou modifier de l’IaC, les éléments suivants doivent être
-explicitement définis dans les artefacts `TS-…` concernés :
+Infrastructure is a high‑impact domain.
 
-- Provider (ex : hostinger, aws, gcp, on-premise…)
-- Type de ressource cible (ex : VPS, cluster, VM…)
-- Outil IaC (ex : terraform, ansible, script shell…)
-- Environnement cible (ex : dev, staging, prod)
-- Stratégie de déploiement (ex : docker compose, kubernetes…)
+As a consequence:
 
-Si un seul de ces éléments est absent :
-
-→ ÉCHEC BLOQUANT
-→ Aucune génération de code infra
-→ Demande explicite d’information ciblée
+- No implicit assumption is allowed.
+- No default value is allowed.
+- Any missing structural information is a blocking issue.
 
 ---
 
-## 3. Checklist bloquante IaC
+## 2. Mandatory Prerequisites for Any IaC
 
-Toute action infra doit valider la checklist suivante :
+Before generating or modifying IaC, the following elements must be
+explicitly defined in the relevant `TS-…` artefacts:
 
-- [ ] TS-… existant et défini dans la documentation
-- [ ] Provider explicitement mentionné
-- [ ] Outil IaC explicitement mentionné
-- [ ] Mapping clair vers `infra/`
-- [ ] Aucun type inventé
+- Provider (e.g. hostinger, aws, gcp, on‑premise…)
+- Target resource type (e.g. VPS, cluster, VM…)
+- IaC tool (e.g. terraform, ansible, shell script…)
+- Target environment (e.g. dev, staging, prod)
+- Deployment strategy (e.g. docker compose, kubernetes…)
 
-Si une case est fausse → arrêt immédiat.
+If any of these elements is missing:
 
----
-
-## 4. Interdictions explicites
-
-Il est interdit de :
-
-- Choisir un provider par défaut (ex : AWS implicite)
-- Choisir Terraform par défaut
-- Générer une infra générique “placeholder” exécutable
-- Introduire un nouveau type d’artefact
-- Ajouter un champ de catégorisation non prévu
+→ BLOCKING FAILURE  
+→ No infra code generation  
+→ Explicit, targeted information request
 
 ---
 
-## 5. Gestion des cas d’échec
+## 3. Blocking IaC Checklist
 
-En cas d’information manquante, le message doit suivre le format :
+Any infra action must validate the following checklist:
 
+- [ ] TS-… exists and is defined in documentation
+- [ ] Provider is explicitly mentioned
+- [ ] IaC tool is explicitly mentioned
+- [ ] Clear mapping to `infra/`
+- [ ] No invented type
+
+If any item is false → immediate stop.
+
+---
+
+## 4. Explicit Prohibitions
+
+It is forbidden to:
+
+- Choose a default provider (e.g. implicit AWS)
+- Choose Terraform as default
+- Generate a generic executable “placeholder” infra
+- Introduce a new artefact type
+- Add any non‑planned categorisation field
+
+---
+
+## 5. Handling Failure Cases
+
+When information is missing, the message must follow this format:
+
+```text
+BLOCKING FAILURE - INFRA
+Missing element: <precise field>
+No assumption allowed.
 ```
-ÉCHEC BLOQUANT - INFRA
-Élément manquant : <champ précis>
-Aucune hypothèse autorisée.
-```
 
-Une seule question ciblée doit être posée.
-Pas de spéculation.
+Only one targeted question must be asked.
+No speculation.
 
 ---
 
-## 6. Relation avec la roadmap et les LOT
+## 6. Relation with Roadmap and LOTs
 
-Les artefacts `TS-…` manipulés dans `infra/` doivent :
+`TS-…` artefacts manipulated under `infra/` must:
 
-- Être référencés dans la roadmap
-- Être inclus explicitement dans un `LOT-…`
+- Be referenced in the roadmap
+- Be explicitly included in a `LOT-…`
 
-Un LOT ne peut pas être enrichi implicitement avec des dépendances infra.
+A LOT cannot be implicitly enriched with infra dependencies.
 
-Toute dépendance technique doit être explicitement ajoutée à la roadmap.
+Any technical dependency must be explicitly added to the roadmap.
 
 ---
 
-## 7. Portée
+## 7. Scope
 
-Ces règles s’appliquent uniquement au répertoire `infra/`.
+These rules apply only to the `infra/` directory.
 
-Les autres domaines (`src/`, documentation, tests) restent régis
-principalement par le `AGENTS.md` racine.
+Other domains (`src/`, documentation, tests) remain governed
+mainly by the root `AGENTS.md`.
+

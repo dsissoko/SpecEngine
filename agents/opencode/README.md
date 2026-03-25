@@ -1,36 +1,36 @@
-# agents/opencode — Intégration OpenCode (gabarit)
+# agents/opencode — OpenCode Integration (Template)
 
-Ce répertoire documente **comment utiliser OpenCode** comme orchestrateur
-pour ce projet gabarit. Il est volontairement minimal et doit être adapté
-par projet.
+This directory documents **how to use OpenCode** as an orchestrator
+for this template project. It is intentionally minimal and must be
+adapted per project.
 
 ---
 
-## 1. Prérequis et installation d’OpenCode (ex. sous WSL)
+## 1. Prerequisites and OpenCode Installation (e.g. under WSL)
 
-Prérequis techniques (à adapter selon ton environnement) :
-- Git, curl, Python 3 disponibles dans ton WSL.
+Technical prerequisites (adapt to your environment):
+- Git, `curl`, Python 3 available in your WSL.
 
-Installation d’OpenCode :
+OpenCode installation:
 
 ```bash
 curl -fsSL https://opencode.ai/install | bash
 ```
 
-Ensuite, assure-toi que le binaire `opencode` est dans ton `PATH`
-(souvent `~/.local/bin` ou `~/.opencode/bin`) :
+Then make sure the `opencode` binary is in your `PATH`
+(often `~/.local/bin` or `~/.opencode/bin`):
 
 ```bash
 opencode --help
 ```
 
-Si la commande n’est pas trouvée, ajoute par exemple dans `~/.bashrc` :
+If the command is not found, add for example in `~/.bashrc`:
 
 ```bash
 export PATH="$HOME/.local/bin:$HOME/.opencode/bin:$PATH"
 ```
 
-puis recharge ta session :
+then reload your session:
 
 ```bash
 source ~/.bashrc
@@ -38,88 +38,87 @@ source ~/.bashrc
 
 ---
 
-## 2. Rappels sur la structure du projet
+## 2. Project Structure Reminders
 
-OpenCode (ou tout autre orchestrateur) doit s’appuyer sur les artefacts
-suivants :
+OpenCode (or any orchestrator) should rely on the following artefacts:
 
-- `CONVENTIONS.md` : processus, rôles, normes (dont processus Git mono-LOT).  
-- `AGENTS.md` : “constitution” agentique (comment les agents doivent lire la doc).  
-- `agents/AGENT_IMPLEMENTATION.md` : mapping générique **rôles → profils d’agents**.  
-- `docs/` : artefacts d’entrée pour les agents (vision, produit, conception, plans, exploitation).
+- `CONVENTIONS.md`: processes, roles, standards (including mono‑LOT Git process).  
+- `AGENTS.md`: agent “constitution” (how agents should read the docs).  
+- `agents/AGENT_IMPLEMENTATION.md`: generic mapping **roles → agent profiles**.  
+- `docs/`: input artefacts for agents (vision, product, design, plans, operations).
 
-L’idée est que l’orchestrateur OpenCode **ne réinvente rien** : il lit ces
-fichiers et applique simplement les règles décrites.
-
----
-
-## 3. Mapping des rôles sur OpenCode (à compléter)
-
-Les rôles définis dans `CONVENTIONS.md` et détaillés dans
-`agents/AGENT_IMPLEMENTATION.md` sont :
-
-- Orchestrateur  
-- Développeur “Feature & Domaine”  
-- Responsable Tests & Qualité (QA/SDET)  
-- Responsable Infra & Exploitation (DevOps/SRE)
-
-Pour chaque projet, il est recommandé de définir dans la configuration
-OpenCode (preset, profiles, etc.) :
-
-- le **nom du profil OpenCode** pour chaque rôle (ex. `orchestrateur`, `dev_feature`, `qa`, `infra`),  
-- le **prompt cœur de métier** correspondant (en reprenant/ajustant les prompts
-  proposés dans `agents/AGENT_IMPLEMENTATION.md`),  
-- les **outils MCP** à disposition de chaque profil (accès FS/Git, CI/CD, etc.).
-
-Ce README ne fige pas le format de configuration OpenCode : il indique seulement
-**où piocher l’information métier** à reproduire dans cette configuration.
+The idea is that the OpenCode orchestrator **does not reinvent anything**:
+it reads these files and simply applies the described rules.
 
 ---
 
-## 4. Happy path type avec OpenCode
+## 3. Role Mapping in OpenCode (to Complete)
 
-Un scénario minimal pour ce gabarit pourrait être :
+Roles are defined in `CONVENTIONS.md` and detailed in
+`agents/AGENT_IMPLEMENTATION.md`:
 
-1. Cloner ce dépôt gabarit, adapter `docs/00_vision`, `docs/01_produit`,
-   `docs/02_conception`, `CONVENTIONS.md`, `AGENTS.md`.  
-2. Configurer OpenCode avec 4 profils d’agents correspondant aux rôles ci‑dessus.  
-3. Demander à l’orchestrateur (profil `orchestrateur`) de :
-   - lire la `ROADMAP.md`,  
-   - créer/mettre à jour le `plan_X.Y.md` de la version ciblée,  
-   - créer le premier `LOT-…` et la branche Git correspondante,  
-   - déclencher les sous‑agents (Dev/QA/Infra) pour implémenter le LOT.  
+- Orchestrator  
+- Feature & Domain Developer  
+- Tests & Quality Owner (QA/SDET)  
+- Infra & Operations Owner (DevOps/SRE)
 
-Les détails (fichier de preset OpenCode, commandes exactes) dépendent de la
-version d’OpenCode et de ton environnement, et devront être ajoutés ici par
-projet si nécessaire.
+For each project, you should define in the OpenCode configuration
+(preset, profiles, etc.):
+
+- the **OpenCode profile name** for each role (e.g. `orchestrator`, `dev_feature`, `qa`, `infra`),  
+- the corresponding **core prompt** (reusing/adjusting prompts from
+  `agents/AGENT_IMPLEMENTATION.md`),  
+- the **MCP tools** available to each profile (FS/Git, CI/CD, etc.).
+
+This README does not fix the OpenCode configuration format: it only
+describes **where to fetch the business content** to reproduce in that config.
 
 ---
 
-## 5. Emplacement du fichier de config OpenCode pour ce projet
+## 4. Example Happy Path with OpenCode
 
-Dans ce gabarit, on considère que la configuration spécifique à OpenCode
-pour ce dépôt vit sous `agents/opencode/` :
+A minimal scenario for this template could be:
 
-- fichier de config (exemple illustratif) :  
+1. Clone this template repo, adapt `docs/00_vision`, `docs/01_product`,
+   `docs/02_design`, `CONVENTIONS.md`, `AGENTS.md`.  
+2. Configure OpenCode with 4 agent profiles matching the roles above.  
+3. Ask the orchestrator profile (e.g. `orchestrator`) to:
+   - read `ROADMAP.md`,  
+   - create/update the `plan_X.Y.md` file for the target version,  
+   - create the first `LOT-…` and the corresponding Git branch,  
+   - trigger sub‑agents (Dev/QA/Infra) to implement the LOT.  
+
+Details (OpenCode preset file, exact commands) depend on the OpenCode
+version and your environment, and should be added here per project
+when needed.
+
+---
+
+## 5. Location of the OpenCode Config File for this Project
+
+In this template, the project‑specific OpenCode configuration
+for this repo lives under `agents/opencode/`:
+
+- config file (illustrative example):  
   `agents/opencode/opencode.jsonc`
 
-Pour l’utiliser, tu peux lancer OpenCode **depuis la racine du projet** en
-pointant explicitement vers ce fichier via la variable d’environnement
-`OPENCODE_CONFIG` :
+To use it, run OpenCode **from the project root** and point explicitly
+to this file via the `OPENCODE_CONFIG` environment variable:
 
 ```bash
-cd /chemin/vers/full-meta-project
+cd /path/to/full-meta-project
 OPENCODE_CONFIG="agents/opencode/opencode.jsonc" opencode tui .
 ```
 
-ou bien :
+or:
 
 ```bash
 export OPENCODE_CONFIG="$PWD/agents/opencode/opencode.jsonc"
 opencode tui .
 ```
 
-Le contenu de `agents/opencode/opencode.jsonc` fourni dans ce dépôt est un
-**exemple illustratif** : il doit être complété/prolongé pour définir
-réellement les profils `orchestrateur`, `dev_feature`, `qa` et `infra`
-conformément à `agents/opencode/AGENT_IMPLEMENTATION_opencode.md`.
+The content of `agents/opencode/opencode.jsonc` provided in this repo
+is an **illustrative example**: it must be completed/extended to define
+actual `orchestrator`, `dev_feature`, `qa` and `infra` profiles
+consistent with `agents/opencode/AGENT_IMPLEMENTATION_opencode.md`.
+
