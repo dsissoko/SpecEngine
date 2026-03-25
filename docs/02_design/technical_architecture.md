@@ -2,7 +2,7 @@
 
 ## Introduction
 This document describes technical choices and runtime environment
-for the system.
+for the `__PROJECT_NAME__` system at `__ORG_NAME__`.
 
 It complements:
 - the [software architecture](./software_architecture.md)

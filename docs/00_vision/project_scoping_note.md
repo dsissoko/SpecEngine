@@ -1,7 +1,7 @@
 # Project Scoping Note
 
 ## Introduction
-This document defines the scope of the project.
+This document defines the scope of `__PROJECT_NAME__` for `__ORG_NAME__`.
 
 See also:
 - [Product Brief](./product_brief.md)
@@ -57,4 +57,3 @@ Identify main risks:
 
 ## 7. Success Criteria
 Define the conditions under which the project is considered successful.
-

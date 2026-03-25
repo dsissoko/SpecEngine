@@ -2,8 +2,8 @@
 
 ## 1. Purpose
 
-This file is the **constitution for the agents** working on this repository
-(humans and AI).
+This file is the **constitution for the agents** working on the `__PROJECT_NAME__`
+repository for `__ORG_NAME__` (humans and AI).
 
 - The **working processes** and **format/quality standards** are described in
   `CONVENTIONS.md`.

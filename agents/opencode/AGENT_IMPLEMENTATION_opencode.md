@@ -123,12 +123,12 @@ For each role, complete the following in OpenCode configuration:
 - **Core prompt** (a few sentences),
 - **Allowed MCP tools** (FS/Git, CI/CD, etc.).
 
-Texts below serve as **templates** for these prompts.
+Texts below serve as **examples** for these prompts.
 
 ### 1.1 OpenCode Profile — Feature & Domain Developer
 
 - OpenCode profile name: to define (e.g. `dev_feature`)  
-- Core prompt (template):
+- Suggested core prompt:
   - You are responsible for implementing features from the project input artefacts.  
   - You primarily read:  
     - `docs/01_product/specifications.md`, `docs/01_product/ROADMAP.md`,  
@@ -143,7 +143,7 @@ Texts below serve as **templates** for these prompts.
 ### 1.2 OpenCode Profile — Tests & Quality Owner (QA/SDET)
 
 - OpenCode profile name: to define (e.g. `qa`)  
-- Core prompt (template):
+- Suggested core prompt:
   - You are responsible for designing and updating automated tests.  
   - You primarily read:  
     - `docs/01_product/specifications.md`,  
@@ -157,7 +157,7 @@ Texts below serve as **templates** for these prompts.
 ### 1.3 OpenCode Profile — Infra & Operations Owner (DevOps/SRE)
 
 - OpenCode profile name: to define (e.g. `infra`)  
-- Core prompt (template):
+- Suggested core prompt:
   - You are responsible for infrastructure, pipelines and run/operations aspects.  
   - You primarily read:  
     - `docs/02_design/technical_architecture.md`,  
@@ -172,7 +172,7 @@ Texts below serve as **templates** for these prompts.
 ### 1.4 OpenCode Profile — Orchestrator
 
 - OpenCode profile name: to define (e.g. `orchestrator`)  
-- Core prompt (template):
+- Suggested core prompt:
   - You coordinate work on this repository based on project documentation and conventions.  
   - You primarily read:  
     - `CONVENTIONS.md`, `AGENTS.md`,  
@@ -198,7 +198,7 @@ the roles above into OpenCode for this project.
    ```
 
    - If it does not exist, create `agents/opencode/opencode.jsonc`
-     starting from the illustrative example provided in this template.
+     starting from the illustrative example provided in this repository.
 
 2. Open `agents/opencode/opencode.jsonc` and define, under the root
    `agents` key, **one agent per role**:
@@ -263,4 +263,3 @@ OpenCode configuration:
 This file does not describe the detailed OpenCode config format:
 it sets the **business content** to mirror there and the **location**
 of the project configuration (`agents/opencode/opencode.jsonc`).
-

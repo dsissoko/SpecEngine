@@ -1,6 +1,7 @@
 # ROADMAP — Product View by Version
 
-This document describes the **product vision per version**.
+This document describes the **product vision per version** for
+`__PROJECT_NAME__` at `__ORG_NAME__`.
 It is an input artefact for the orchestrator, which builds
 per‑version delivery plans in `docs/03_delivery/plan_X.Y.md`.
 
@@ -34,4 +35,3 @@ Recommended format — rows below are illustrative examples:
 - Each `LOT-…` indicates:
   - the **target or impacted** version (`X.Y.Z`),
   - the relevant `FEAT` and optionally `LS`/`TS`.
-

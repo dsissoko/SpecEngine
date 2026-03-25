@@ -1,7 +1,8 @@
-# AGENT_IMPLEMENTATION.md — Agent Implementation (Template)
+# AGENT_IMPLEMENTATION.md — Agent Implementation Guide
 
 This document describes **how the roles defined in `CONVENTIONS.md`
-are instantiated as agents** (profiles, core prompts, MCP tools).
+are instantiated as agents** (profiles, core prompts, MCP tools)
+for `__PROJECT_NAME__` at `__ORG_NAME__`.
 
 It is intentionally short: the goal is to provide a generic frame,
 adaptable to any orchestrator (OpenCode, Codex, others).
@@ -95,4 +96,3 @@ Recommended minimal MCPs:
 Complete with:
 - Name/type of each MCP,  
 - main role (e.g. “read/write docs”, “create GitHub PRs”, etc.).
-

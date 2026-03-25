@@ -1,7 +1,8 @@
 # Security
 
 ## 1. Purpose
-Describe the system’s security rules and expectations.
+Describe the system’s security rules and expectations for
+`__PROJECT_NAME__` at `__ORG_NAME__`.
 
 ---
 
@@ -35,4 +36,3 @@ Describe the system’s security rules and expectations.
 ## 6. Known Risks
 - Sensitive areas
 - Current limitations
-
