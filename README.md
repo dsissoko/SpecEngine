@@ -240,7 +240,12 @@ curl -fsSL https://raw.githubusercontent.com/dsissoko/SpecEngine/main/scripts/sp
   | bash -s -- "My Service" "Acme Corp"
 ```
 
-The script only needs a project name and an organisation name and writes into the current directory. For non-interactive usage, you can add `--yes` before the project name. For advanced usage (custom destination, explicit template URL), run `scripts/specengine-new.sh --help`.
+The script:
+- only needs a project name and an organisation name,
+- writes the instantiated template into the current (empty) directory,
+- initialises a fresh Git repository in that directory.
+
+For non-interactive usage, you can add `--yes` before the project name. For advanced usage (custom destination, explicit template URL), run `scripts/specengine-new.sh --help`.
 
 ### 4.1 Human orchestration
 
