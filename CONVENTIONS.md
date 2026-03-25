@@ -1,169 +1,170 @@
-# CONVENTIONS.md — Processus et normes du projet
+# CONVENTIONS.md — Project Processes and Standards
 
-Ce fichier décrit les **processus de travail** et les **normes de forme/qualité**
-communes aux humains et aux agents. Il est propre à ce projet, mais peut servir
-de gabarit pour d’autres projets.
+This file describes the **working processes** and **format/quality standards**
+shared by humans and agents. It is specific to this project, but can be reused
+as a template for other projects.
 
 ---
 
-## 1. Processus de travail
+## 1. Work processes
 
-- Le développement est **piloté par la documentation** :
-  - vision et cadrage dans `docs/00_vision`,
-  - spécification produit dans `docs/01_product`,
-  - roadmap produit par version dans `docs/01_product/ROADMAP.md`,
-  - conception / design dans `docs/02_design`,
-  - plans de réalisation par version dans `docs/03_delivery/plan_X.Y.md`,
-  - exploitation / opérations dans `docs/04_operations`.
-- Tout artefact géré dans le dépôt (`docs/*`, `src/`, `infra/`, `tests/`,
-  `agents/`, etc.) suit le même cycle de vie :
-  - toute modification (y compris documentation, plans et procédures d’exploitation)
-    doit être réalisée dans une branche Git dédiée,
-  - cette branche donne lieu à une PR/MR relue,
-  - puis est fusionnée dans la branche principale et embarquée dans un tag de release.
-  Aucune mise à jour “hors Git” n’est autorisée.
-- Toute évolution significative de `src/`, `infra/`, `tests/` doit :
-  - être justifiée par une évolution des artefacts d’entrée (`FEAT`, `BF`, `LS`, `TS`, `LOT`),
-  - respecter l’ordre logique : **doc → plan → implémentation → tests**.
-- Les lots (`LOT-…`) servent à organiser le travail :
-  - un lot regroupe un sous-ensemble de `FEAT` (et éventuellement `LS`/`TS`),
-  - on évite de travailler sur trop de lots en parallèle.
+- Development is **driven by documentation**:
+  - vision and scoping in `docs/00_vision`,
+  - product specification in `docs/01_product`,
+  - product roadmap by version in `docs/01_product/ROADMAP.md`,
+  - design in `docs/02_design`,
+  - per‑version delivery plans in `docs/03_delivery/plan_X.Y.md`,
+  - operations in `docs/04_operations`.
+- Every artefact managed in the repository (`docs/*`, `src/`, `infra/`, `tests/`,
+  `agents/`, etc.) follows the same lifecycle:
+  - any change (including documentation, plans and operations procedures)
+    must be done in a dedicated Git branch,
+  - that branch is reviewed via a PR/MR,
+  - and only then merged into the main branch and included in a release tag.
+  No “out‑of‑Git” change is allowed.
+- Any significant change to `src/`, `infra/`, `tests/` must:
+  - be justified by a change in the input artefacts (`FEAT`, `BF`, `LS`, `TS`, `LOT`),
+  - respect the logical order: **docs → plan → implementation → tests**.
+- Batches (`LOT-…`) are used to organise work:
+  - a batch groups a subset of `FEAT` (and optionally `LS`/`TS`),
+  - avoid working on too many batches in parallel.
 
-- Chaque `LOT-…` dans un fichier de plan de version (`docs/03_delivery/plan_X.Y.md`) doit :
-  - être rattaché à au moins une version SemVer (`X.Y.Z`),
-  - s’aligner sur une macro-version `X.Y` décrite dans la roadmap (`ROADMAP.md`) lorsque le travail est lié à l’évolution produit.
-  - la version peut désigner :
-    - soit une **version déjà déployée** (cas de bug, incident, rollback),
-    - soit une **nouvelle version à préparer / déployer** (évolution produit, nouvelle release).
+- Each `LOT-…` in a version plan file (`docs/03_delivery/plan_X.Y.md`) must:
+  - be linked to at least one SemVer version (`X.Y.Z`),
+  - be aligned with a macro‑version `X.Y` described in the roadmap (`ROADMAP.md`)
+    when the work is related to product evolution,
+  - the version may designate:
+    - either an **already deployed version** (bug, incident, rollback),
+    - or a **new version to prepare / deploy** (product evolution, new release).
 
-### 1.2 Cas d’usage process (tous via LOT)
+### 1.2 Process use cases (all via LOT)
 
-Tout travail passe par un `LOT-…`. Un LOT porte **un process principal** parmi les suivants :
+All work goes through a `LOT-…`. A LOT carries **one main process** among:
 
-1. **Créer une nouvelle feature**  
-   - Périmètre : un ou plusieurs `FEAT-…` (et BF/LS associés).  
-   - Version : nouvelle version cible `X.Y.Z`.
-2. **Corriger un bug**  
-   - Périmètre : `FEAT`/`LS`/`TS` impactés.  
-   - Version : version impactée existante ou nouvelle version de patch.
-3. **Modifier une feature existante**  
-   - Périmètre : `FEAT`/`BF`/`LS` concernés.  
-   - Version : nouvelle version MINOR ou PATCH selon l’impact.
-4. **Mettre en place l’infra / pipeline la première fois**  
-   - Périmètre : un ou plusieurs `TS-…` nouveaux.  
-   - Version : version cible associée à la première mise en service.
-5. **Mettre à jour l’infra / pipeline existants**  
-   - Périmètre : `TS-…` existants à faire évoluer.  
-   - Version : version impactée (existante) ou nouvelle version si nécessaire.
-6. **Préparer une nouvelle version (release)**  
-   - Périmètre : ensemble de `LOT-…` à embarquer dans une même version `X.Y.Z`.  
-   - Version : version cible de release.
-7. **Diagnostiquer un incident en production**  
-   - Périmètre : au minimum le ou les `TS-…` impactés, complétés ensuite par `LS`/`FEAT` identifiés.  
-   - Version : version déployée impactée.
-8. **Faire un rollback / désactiver une version défaillante**  
-  - Périmètre : version impactée et `TS`/`LS` concernés.  
-  - Version : version à rollback (déployée).
+1. **Create a new feature**  
+   - Scope: one or more `FEAT-…` (and associated BF/LS).  
+   - Version: new target version `X.Y.Z`.
+2. **Fix a bug**  
+   - Scope: impacted `FEAT`/`LS`/`TS`.  
+   - Version: impacted existing version or a new patch version.
+3. **Modify an existing feature**  
+   - Scope: affected `FEAT`/`BF`/`LS`.  
+   - Version: new MINOR or PATCH version depending on impact.
+4. **Set up infra / pipeline for the first time**  
+   - Scope: one or more new `TS-…`.  
+   - Version: target version associated with the first go‑live.
+5. **Update existing infra / pipelines**  
+   - Scope: existing `TS-…` to evolve.  
+   - Version: impacted (existing) version or a new version if needed.
+6. **Prepare a new version (release)**  
+   - Scope: set of `LOT-…` to include in the same version `X.Y.Z`.  
+   - Version: target release version.
+7. **Diagnose a production incident**  
+   - Scope: at least the impacted `TS-…`, then extended to identified `LS`/`FEAT`.  
+   - Version: impacted deployed version.
+8. **Rollback / deactivate a failing version**  
+   - Scope: impacted version and related `TS`/`LS`.  
+   - Version: deployed version to rollback.
 
-Ces règles s’appliquent à toute personne ou agent qui modifie ce dépôt.
+These rules apply to any person or agent modifying this repository.
 
-### 1.3 Processus Git (mode mono-LOT)
+### 1.3 Git process (mono‑LOT mode)
 
-Ce projet propose un flux Git simple, pensé pour un **traitement d’un seul LOT à la fois**.
+This project uses a simple Git flow, designed for **handling a single LOT at a time**.
 
 1. **Roadmap (`docs/01_product/ROADMAP.md`) → versions `X.Y`**  
-   - La vue produit décrit, par exemple :  
-     - _« En 1.4 on livre FEAT-0001, FEAT-0002… »_.
+   - The product view describes, for example:  
+     - _“In 1.4 we ship FEAT-0001, FEAT-0002…”_.
 
-2. **Plan de version (`docs/03_delivery/plan_X.Y.md`) → `LOT-…`**  
-   - L’Orchestrateur lit la roadmap pour une version (ex. `1.4`) et la décline en LOT :  
-     - `LOT-001` : périmètre (FEAT/BF/LS/TS) et process principal,  
-     - `LOT-002` : idem, etc.
+2. **Version plan (`docs/03_delivery/plan_X.Y.md`) → `LOT-…`**  
+   - The Orchestrator reads the roadmap for a version (e.g. `1.4`) and breaks it
+     down into LOTs:  
+     - `LOT-001`: scope (FEAT/BF/LS/TS) and main process,  
+     - `LOT-002`: same idea, etc.
 
-3. **`LOT-…` → branche Git**  
-   - Pour chaque LOT, on crée une branche de travail dédiée, par exemple :  
-     - `lot/1.4.0-001` pour `LOT-001`,  
-     - `lot/1.4.0-002` pour `LOT-002`.  
-   - Tout le travail humain/agent sur ce LOT se fait dans **sa** branche.  
-   - La branche principale (souvent `main`) n’est pas modifiée directement.
+3. **`LOT-…` → Git branch**  
+   - For each LOT, create a dedicated working branch, for example:  
+     - `lot/1.4.0-001` for `LOT-001`,  
+     - `lot/1.4.0-002` for `LOT-002`.  
+   - All human/agent work for this LOT happens in **its** branch.  
+   - The main branch (often `main`) is not modified directly.
 
 4. **Commits → trace `LOT` / `FEAT`**  
-   - Les messages de commit sur la branche du LOT mentionnent au minimum l’ID du LOT :  
+   - Commit messages on the LOT branch mention at least the LOT ID:  
      - `LOT-001: impl FEAT-0001 service catalogue`.  
-   - Quand c’est pertinent, on ajoute aussi les IDs `FEAT-…` / `LS-…` / `TS-…`.
+   - When relevant, also include the `FEAT-…` / `LS-…` / `TS-…` IDs.
 
-5. **PR/MR → fusion vers `main`**  
-   - Quand le LOT est terminé (code, tests et éventuellement infra) :  
-     - création d’une PR/MR depuis `lot/1.4.0-001` vers `main`,  
-     - passage de la CI, revue (humaine ou agent), puis merge.
+5. **PR/MR → merge into `main`**  
+   - When the LOT is complete (code, tests and possibly infra):  
+     - create a PR/MR from `lot/1.4.0-001` to `main`,  
+     - let CI run, perform human/agent review, then merge.
 
-6. **Release par version**  
-   - Quand tous les LOT liés à une version `1.4.0` sont fusionnés dans `main` :  
-     - création d’un tag Git `v1.4.0`,  
-     - déclenchement du pipeline de release/déploiement correspondant
-       (décrit dans `docs/04_operations/deployment.md` et fichiers associés).
+6. **Release per version**  
+   - When all LOTs for version `1.4.0` are merged into `main`:  
+     - create a Git tag `v1.4.0`,  
+     - trigger the corresponding release/deployment pipeline
+       (described in `docs/04_operations/deployment.md` and related files).
 
-#### 1.3.1 Bonnes pratiques de travail sur les branches LOT
+#### 1.3.1 Good practices when working on LOT branches
 
-- Rester en permanence sur la branche du LOT pendant le développement
-  (`lot/X.Y.Z-XXX`) et ne jamais committer directement sur `main`.
-- Pousser rapidement la branche du LOT vers le dépôt distant après sa création
-  (branche “vide” ou quasi vide) pour :
-  - la rendre visible (CI, revue, outils),
-  - permettre l’ouverture précoce d’une PR/MR si souhaité,
-  - sauvegarder le point de départ sur le dépôt central.
-- Commiter tôt et souvent, avec des messages clairs et atomiques
-  (incluant au minimum `LOT-…`, et si possible les IDs `FEAT-…` / `LS-…` / `TS-…`).
-- Avant d’ouvrir une PR/MR :
-  - mettre la branche LOT à jour par rapport à `main` (pull + rebase/merge),
-  - s’assurer que les tests et outils de qualité (lint, format, etc.) passent en local.
-- La PR/MR est le point unique de revue :
-  - discussion, corrections éventuelles, passage de la CI,
-  - merge vers `main` uniquement une fois la PR validée.
+- Stay on the LOT branch during development
+  (`lot/X.Y.Z-XXX`) and never commit directly to `main`.
+- Push the LOT branch to the remote soon after creation
+  (an “empty” or almost empty branch) in order to:
+  - make it visible (CI, reviews, tools),
+  - allow opening an early PR/MR if desired,
+  - save the starting point on the central repository.
+- Commit early and often, with clear and atomic messages
+  (including at least `LOT-…`, and if possible the `FEAT-…` / `LS-…` / `TS-…` IDs).
+- Before opening a PR/MR:
+  - update the LOT branch with `main` (pull + rebase/merge),
+  - ensure tests and quality tools (lint, format, etc.) pass locally.
+- The PR/MR is the single review point:
+  - discussion, potential fixes, CI run,
+  - merge into `main` only once the PR is approved.
 
-#### 1.3.2 Happy path Git pour un LOT (exemple)
+#### 1.3.2 Git happy path for a LOT (example)
 
-Exemple avec :
-- branche principale : `main`,
-- LOT : `LOT-001` pour la version `1.4.0`,
-- branche du LOT : `lot/1.4.0-001`,
-- remote principal : `origin`.
+Example:
+- main branch: `main`,
+- LOT: `LOT-001` for version `1.4.0`,
+- LOT branch: `lot/1.4.0-001`,
+- main remote: `origin`.
 
-1. **Cloner le dépôt (si nécessaire)**
+1. **Clone the repository (if needed)**
 
 ```bash
 git clone git@serveur:organisation/projet.git
 cd projet
 ```
 
-2. **Mettre `main` à jour**
+2. **Update `main`**
 
 ```bash
 git checkout main
 git pull origin main
 ```
 
-3. **Créer la branche du LOT**
+3. **Create the LOT branch**
 
 ```bash
 git checkout -b lot/1.4.0-001
-git push -u origin lot/1.4.0-001    # rendre la branche visible dès le départ
+git push -u origin lot/1.4.0-001    # make the branch visible from the start
 ```
 
-4. **Travailler sur le LOT (boucle dev)**
+4. **Work on the LOT (dev loop)**
 
-Éditer le code, puis :
+Edit the code, then:
 
 ```bash
 git status
-git add chemin/vers/fichier1 chemin/vers/fichier2   # ou `git add .` avec prudence
-git commit -m "LOT-001: message de commit clair"
+git add path/to/file1 path/to/file2   # or `git add .` with care
+git commit -m "LOT-001: clear commit message"
 ```
 
-Répéter cette boucle autant de fois que nécessaire.
+Repeat this loop as many times as needed.
 
-5. **Réaligner la branche LOT sur `main` (si `main` a bougé)**
-
+5. **Realign the LOT branch with `main` (if `main` has moved)**
 ```bash
 git checkout main
 git pull origin main
@@ -171,63 +172,63 @@ git checkout lot/1.4.0-001
 git rebase main    # ou `git merge main` selon la politique du projet
 ```
 
-Résoudre les conflits éventuels :
+Resolve any conflicts:
 
 ```bash
-# corriger les fichiers en conflit
-git add chemins/vers/fichiers_corriges
-git rebase --continue    # si rebase
+# fix conflicting files
+git add paths/to/fixed_files
+git rebase --continue    # if using rebase
 ```
 
-6. **Vérifier les tests et la qualité en local**
+6. **Run tests and quality checks locally**
 
 ```bash
-# Exemple générique à adapter au projet
-<commande-tests>          # ex. `pytest`, `npm test`, `cargo test`…
-<commande-lint-format>    # ex. `npm run lint`, `ruff`, etc.
+# Generic example to adapt to the project
+<test-command>          # e.g. `pytest`, `npm test`, `cargo test`…
+<lint-format-command>   # e.g. `npm run lint`, `ruff`, etc.
 ```
 
-7. **Pousser la branche LOT vers le remote**
+7. **Push the LOT branch to the remote**
 
-Première fois :
+First time:
 
 ```bash
 git push -u origin lot/1.4.0-001
 ```
 
-Ensuite (commits supplémentaires) :
+Then (additional commits):
 
 ```bash
 git push
 ```
 
-8. **Ouvrir la PR/MR depuis la branche LOT vers `main`**
+8. **Open the PR/MR from the LOT branch to `main`**
 
-- Se faire sur la plateforme distante (GitHub, GitLab, etc.) en choisissant :
-  - base : `main`,
-  - compare/source : `lot/1.4.0-001`.
-- La revue et la CI se déroulent sur cette PR/MR.
+- Do this on the remote platform (GitHub, GitLab, etc.) by choosing:
+  - base: `main`,
+  - compare/source: `lot/1.4.0-001`.
+- Review and CI run on this PR/MR.
 
-9. **Après merge de la PR/MR vers `main`**
+9. **After the PR/MR is merged into `main`**
 
-Récupérer l’état à jour localement :
+Get the up‑to‑date state locally:
 
 ```bash
 git checkout main
 git pull origin main
 ```
 
-Optionnel : supprimer la branche LOT devenue inutile :
+Optionally, delete the LOT branch once it is no longer needed:
 
 ```bash
 git branch -d lot/1.4.0-001
 git push origin --delete lot/1.4.0-001
 ```
 
-10. **Tagger la version associée au LOT (si applicable)**
+10. **Tag the version associated with the LOT (if applicable)**
 
-Si `LOT-001` clôture la version `1.4.0` (ou participe à une release
-immédiatement déclenchée) :
+If `LOT-001` completes version `1.4.0` (or is part of an immediately triggered
+release):
 
 ```bash
 git checkout main
@@ -235,82 +236,82 @@ git tag -a v1.4.0 -m "Release v1.4.0"
 git push origin v1.4.0
 ```
 
-Le pipeline de release/déploiement associé au tag est décrit dans
+The release/deployment pipeline associated with the tag is described in
 `docs/04_operations/deployment.md`.
 
-Ce mode mono-LOT constitue le **happy path recommandé**. Des scénarios plus avancés
-(LOTS en parallèle, branches par type d’artefact, etc.) pourront être ajoutés ou adaptés
-par projet, tant qu’ils restent cohérents avec la roadmap, les plans de version et les
-règles de ce fichier.
+This mono‑LOT mode is the **recommended happy path**. More advanced scenarios
+(LOTS in parallel, branches per artefact type, etc.) can be added or adapted
+per project, as long as they remain consistent with the roadmap, version plans
+and the rules in this file.
 
-### 1.1 Rôles et responsabilités
+### 1.1 Roles and responsibilities
 
-Les rôles ci-dessous peuvent être tenus par des humains, des agents, ou un mix des deux.
+The roles below can be held by humans, agents, or a mix of both.
 
-- **Orchestrateur (chef de projet / tech lead)**  
-  - Lit : `CONVENTIONS.md`, `AGENTS.md`, `README.md`, `docs/02_design/tech_stack.md`.  
-  - Par `LOT-…` :
-    - identifie les `FEAT`, `LS`, `TS` concernés,
-    - séquence le travail : doc/plan → code → tests → infra → revue.
+- **Orchestrator (project lead / tech lead)**  
+  - Reads: `CONVENTIONS.md`, `AGENTS.md`, `README.md`, `docs/02_design/tech_stack.md`.  
+  - For each `LOT-…`:
+    - identifies the relevant `FEAT`, `LS`, `TS`,
+    - sequences the work: docs/plan → code → tests → infra → review.
 
-- **Développeur “Feature & Domaine”**  
-  - Lit : `FEAT-…`, `BF-…`, `LS-…`, plan de la version concernée (`docs/03_delivery/plan_X.Y.md`).  
-  - Produit : code applicatif dans `src/` pour les `FEAT` du lot.  
-  - Ne modifie pas l’infra ni les choix de stack.
+- **Feature & Domain Developer**  
+  - Reads: `FEAT-…`, `BF-…`, `LS-…`, the relevant version plan (`docs/03_delivery/plan_X.Y.md`).  
+  - Produces: application code in `src/` for the LOT’s `FEAT`.  
+  - Does not change infra or stack choices.
 
-- **Responsable Tests & Qualité (QA/SDET)**  
-  - Lit : `FEAT-…`, `BF-…`, `LOT-…`, section tests du plan de la version (`docs/03_delivery/plan_X.Y.md`).  
-  - Produit : tests dans `tests/` (unitaires, intégration, contrat) alignés sur les FEAT du lot.  
-  - Ne crée pas de nouvelles fonctionnalités via les tests.
+- **Tests & Quality Owner (QA/SDET)**  
+  - Reads: `FEAT-…`, `BF-…`, `LOT-…`, test section of the version plan (`docs/03_delivery/plan_X.Y.md`).  
+  - Produces: tests in `tests/` (unit, integration, contract) aligned with the LOT’s FEAT.  
+  - Does not create new features through tests.
 
-- **Responsable Infra & Exploitation (DevOps/SRE)**  
-  - Lit : `TS-…`, `docs/02_design/technical_architecture.md`, `docs/02_design/tech_stack.md`, `docs/04_operations/*`.  
-  - Produit : fichiers `infra/` et pipelines CI/CD liés aux `TS` impactés par le lot.  
-  - Ne modifie pas le métier ; se concentre sur déploiement, observabilité, opérations.
+- **Infra & Operations Owner (DevOps/SRE)**  
+  - Reads: `TS-…`, `docs/02_design/technical_architecture.md`, `docs/02_design/tech_stack.md`, `docs/04_operations/*`.  
+  - Produces: `infra/` files and CI/CD pipelines related to the LOT’s `TS`.  
+  - Does not modify business logic; focuses on deployment, observability, operations.
 
 ---
 
-## 2. Normes et style des artefacts de sortie
+## 2. Output artefact standards and style
 
 ### 2.1 Documentation (`docs/`)
 
-- Langue par défaut : **anglais**.
-- Format :
-  - Markdown simple (titres `#`, `##`, listes, tableaux),
-  - les tableaux marqués “Format recommandé” contiennent des **exemples** à adapter,
-  - les identifiants (`FEAT-…`, `BF-…`, `LS-…`, `TS-…`, `LOT-…`) doivent être utilisés tels quels.
-- Style :
-  - phrases courtes, orientées “ce qu’il faut faire / savoir”,
-  - éviter le blabla, privilégier les listes et tableaux.
+- Default language: **English**.
+- Format:
+  - Simple Markdown (headings `#`, `##`, lists, tables),
+  - tables marked “Recommended format” contain **examples** to adapt,
+  - identifiers (`FEAT-…`, `BF-…`, `LS-…`, `TS-…`, `LOT-…`) must be used as‑is.
+- Style:
+  - short sentences, focused on “what to do / know”,
+  - avoid fluff, favour lists and tables.
 
 ### 2.2 Code (`src/`)
 
-- La stack technique par sous-système est définie dans `docs/02_design/tech_stack.md`.
-- Pour chaque `LS-…` :
-  - le code vit dans un dossier ou namespace dérivé de son ID
-    (ex. `LS-SERVICE-CATALOGUE` → `src/service_catalogue/...`),
-  - on respecte les conventions de langage (formateur, linter) propres à la stack choisie.
-- Les noms de fichiers/modules peuvent inclure des IDs fonctionnels lorsque pertinent
-  (ex. `feature_FEAT_0001_recherche.py`).
+- The technical stack per subsystem is defined in `docs/02_design/tech_stack.md`.
+- For each `LS-…`:
+  - code lives in a folder or namespace derived from its ID
+    (e.g. `LS-SERVICE-CATALOGUE` → `src/service_catalogue/...`),
+  - language conventions (formatter, linter) of the chosen stack should be respected.
+- File/module names may include functional IDs when relevant
+  (e.g. `feature_FEAT_0001_search.py`).
 
 ### 2.3 Tests (`tests/`)
 
-- Chaque feature importante (`FEAT-…`) doit avoir au moins :
-  - des tests unitaires sur la logique clé,
-  - des tests d’intégration ou de contrat si des interfaces sont impliquées.
-- Les fichiers `docs/03_realisation/plan_X.Y.md` décrivent :
-  - les types de tests attendus,
-  - les comportements métier critiques à couvrir.
-- Les noms de fichiers de tests doivent refléter le périmètre testé
-  (par exemple en incluant l’ID `FEAT-…` ou `LS-…`).
+- Every important feature (`FEAT-…`) must have at least:
+  - unit tests on key logic,
+  - integration or contract tests when interfaces are involved.
+- Files `docs/03_delivery/plan_X.Y.md` describe:
+  - the types of tests expected,
+  - the critical business behaviours to cover.
+- Test file names should reflect the tested scope
+  (for example by including the `FEAT-…` or `LS-…` ID).
 
-### 2.4 Infra et CI/CD (`infra/`, pipelines)
+### 2.4 Infra and CI/CD (`infra/`, pipelines)
 
-- Les artefacts techniques (`TS-…`) sont décrits dans :
+- Technical artefacts (`TS-…`) are described in:
   - `docs/02_design/technical_architecture.md`,
   - `docs/02_design/tech_stack.md`,
   - `docs/04_operations/*`.
-- Chaque `TS-…` doit pouvoir être relié clairement à :
-  - un ou plusieurs fichiers d’IaC (`infra/...`) ou de configuration CI/CD,
-  - un rôle clair (cluster, pipeline, broker, etc.).
-- Les noms de jobs/pipelines peuvent inclure l’ID `TS-…` lorsque pertinent.
+- Each `TS-…` must be clearly linked to:
+  - one or more IaC files (`infra/...`) or CI/CD configuration files,
+  - a clear role (cluster, pipeline, broker, etc.).
+- Job/pipeline names may include the `TS-…` ID when relevant.

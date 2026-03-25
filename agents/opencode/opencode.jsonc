@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  // Configuration OpenCode alignée avec le framework Full Meta Project (FMP)
+  // OpenCode configuration aligned with the Full Meta Project (FMP) framework
   "agents": {
     "orchestrateur": {
       "provider": "openai",

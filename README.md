@@ -1,4 +1,4 @@
-# Template de projet orienté agents
+# Agent‑Oriented Project Template
 
 ## 1. High‑Level Vision
 
@@ -182,8 +182,7 @@ stateDiagram-v2
 ### 3.1 Details — Build & Operate Activities
 
 The tables below summarise the main activities, artefacts and entry points
-for each flow. They will be the reference for simplifying or removing
-the detailed “Activité …” sections once fully stabilised.
+for each flow.
 
 **Build flow — from Vision to Code**
 
