@@ -117,7 +117,6 @@ This project uses a simple Git flow, designed for **handling a single LOT at a t
 - Commit early and often, with clear and atomic messages
   (including at least `LOT-…`, and if possible the `FEAT-…` / `LS-…` / `TS-…` IDs).
 - Before opening a PR/MR:
-  - update the LOT branch with `main` (pull + rebase/merge),
   - ensure tests and quality tools (lint, format, etc.) pass locally.
 - The PR/MR is the single review point:
   - discussion, potential fixes, CI run,
@@ -164,23 +163,7 @@ git commit -m "LOT-001: clear commit message"
 
 Repeat this loop as many times as needed.
 
-5. **Realign the LOT branch with `main` (if `main` has moved)**
-```bash
-git checkout main
-git pull origin main
-git checkout lot/1.4.0-001
-git rebase main    # ou `git merge main` selon la politique du projet
-```
-
-Resolve any conflicts:
-
-```bash
-# fix conflicting files
-git add paths/to/fixed_files
-git rebase --continue    # if using rebase
-```
-
-6. **Run tests and quality checks locally**
+5. **Run tests and quality checks locally**
 
 ```bash
 # Generic example to adapt to the project
@@ -188,7 +171,7 @@ git rebase --continue    # if using rebase
 <lint-format-command>   # e.g. `npm run lint`, `ruff`, etc.
 ```
 
-7. **Push the LOT branch to the remote**
+6. **Push the LOT branch to the remote**
 
 First time:
 
@@ -202,14 +185,14 @@ Then (additional commits):
 git push
 ```
 
-8. **Open the PR/MR from the LOT branch to `main`**
+7. **Open the PR/MR from the LOT branch to `main`**
 
 - Do this on the remote platform (GitHub, GitLab, etc.) by choosing:
   - base: `main`,
   - compare/source: `lot/1.4.0-001`.
 - Review and CI run on this PR/MR.
 
-9. **After the PR/MR is merged into `main`**
+8. **After the PR/MR is merged into `main`**
 
 Get the up‑to‑date state locally:
 
@@ -243,6 +226,71 @@ This mono‑LOT mode is the **recommended happy path**. More advanced scenarios
 (LOTS in parallel, branches per artefact type, etc.) can be added or adapted
 per project, as long as they remain consistent with the roadmap, version plans
 and the rules in this file.
+
+#### 1.3.3 Fixing mistakes on `main` (unhappy path)
+
+Sometimes work is started directly on `main` by mistake instead of on a LOT
+branch. The recovery strategy depends on whether there are uncommitted changes
+or local commits, and whether they have been pushed to `origin/main` or not.
+
+**Case A — Changes on `main`, not committed yet**
+
+Goal: move the local changes from `main` to a branch, without touching `main`.
+
+```bash
+# You are on main with modified files (no commit yet)
+
+# 1. Create and switch to a new branch, carrying the changes
+git switch -c fix/my-mistake    # or: git checkout -b fix/my-mistake
+
+# 2. Continue as usual on this branch
+git status
+git add .                         # or add specific files if needed
+git commit -m "fix: move changes off main"
+git push -u origin fix/my-mistake
+```
+
+`main` remains clean (same commit as `origin/main`), and you can open a PR
+from `fix/my-mistake` to `main`.
+
+**Case B — Commits on `main`, not pushed yet**
+
+Goal: move the commit(s) from `main` to a branch, then restore `main` to the
+state of `origin/main`.
+
+```bash
+# You are on main with local commits (ahead of origin/main)
+
+# 1. Create a branch from the current (incorrect) state of main
+git checkout -b fix/my-mistake
+
+# 2. Restore main to the remote state
+git checkout main
+git reset --hard origin/main
+
+# 3. Publish the new branch
+git push -u origin fix/my-mistake
+```
+
+You can then continue working on `fix/my-mistake` and open a PR from this
+branch to `main` following the regular LOT process.
+
+**Case C — Commits already pushed to `origin/main`**
+
+In this case, avoid rewriting `main` history unless you are absolutely sure
+you are working alone and understand the impact of `push --force`.
+
+- If the commit is a true mistake that must be undone, use `revert`:
+
+```bash
+git checkout main
+git log --oneline           # identify the SHA(s) to revert
+git revert <sha_to_revert>  # repeat for multiple SHAs if needed
+git push origin main
+```
+
+- If the commit is acceptable but should have been on a branch, leave it on
+`main` and ensure that all further work is done on a dedicated LOT branch.
 
 ### 1.1 Roles and responsibilities
 
