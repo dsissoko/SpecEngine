@@ -16,8 +16,8 @@ model_verbosity = "low"  # applicable seulement si wire_api="responses"
 #model_reasoning_summary = "concise"
 #model_reasoning_summary = "detailed"
 model_reasoning_summary = "auto"
-#model_provider = "openai_api"  # provider par défaut
-# Robustesse réseau / surcharge
+#model_provider = "openai_api"  # default provider
+# Network robustness / overload
 #request_max_retries = 2
 #stream_max_retries = 2
 #stream_idle_timeout_ms = 45000
@@ -27,7 +27,7 @@ personality = "pragmatic"
 [sandbox_workspace_write]
 network_access = true
 
-# ✅ Profils = “model par défaut par provider”
+# ✅ Profiles = “default model per provider”
 [profiles.openai]
 model_provider = "openai_api"
 model = "gpt-5.1"
