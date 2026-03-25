@@ -96,6 +96,135 @@ Ce projet propose un flux Git simple, pensé pour un **traitement d’un seul LO
      - déclenchement du pipeline de release/déploiement correspondant
        (décrit dans `docs/04_exploitation/deploiement.md` et fichiers associés).
 
+#### 1.3.1 Bonnes pratiques de travail sur les branches LOT
+
+- Rester en permanence sur la branche du LOT pendant le développement
+  (`lot/X.Y.Z-XXX`) et ne jamais committer directement sur `main`.
+- Commiter tôt et souvent, avec des messages clairs et atomiques
+  (incluant au minimum `LOT-…`, et si possible les IDs `FEAT-…` / `LS-…` / `TS-…`).
+- Avant d’ouvrir une PR/MR :
+  - mettre la branche LOT à jour par rapport à `main` (pull + rebase/merge),
+  - s’assurer que les tests et outils de qualité (lint, format, etc.) passent en local.
+- La PR/MR est le point unique de revue :
+  - discussion, corrections éventuelles, passage de la CI,
+  - merge vers `main` uniquement une fois la PR validée.
+
+#### 1.3.2 Happy path Git pour un LOT (exemple)
+
+Exemple avec :
+- branche principale : `main`,
+- LOT : `LOT-001` pour la version `1.4.0`,
+- branche du LOT : `lot/1.4.0-001`,
+- remote principal : `origin`.
+
+1. **Cloner le dépôt (si nécessaire)**
+
+```bash
+git clone git@serveur:organisation/projet.git
+cd projet
+```
+
+2. **Mettre `main` à jour**
+
+```bash
+git checkout main
+git pull origin main
+```
+
+3. **Créer la branche du LOT**
+
+```bash
+git checkout -b lot/1.4.0-001
+```
+
+4. **Travailler sur le LOT (boucle dev)**
+
+Éditer le code, puis :
+
+```bash
+git status
+git add chemin/vers/fichier1 chemin/vers/fichier2   # ou `git add .` avec prudence
+git commit -m "LOT-001: message de commit clair"
+```
+
+Répéter cette boucle autant de fois que nécessaire.
+
+5. **Réaligner la branche LOT sur `main` (si `main` a bougé)**
+
+```bash
+git checkout main
+git pull origin main
+git checkout lot/1.4.0-001
+git rebase main    # ou `git merge main` selon la politique du projet
+```
+
+Résoudre les conflits éventuels :
+
+```bash
+# corriger les fichiers en conflit
+git add chemins/vers/fichiers_corriges
+git rebase --continue    # si rebase
+```
+
+6. **Vérifier les tests et la qualité en local**
+
+```bash
+# Exemple générique à adapter au projet
+<commande-tests>          # ex. `pytest`, `npm test`, `cargo test`…
+<commande-lint-format>    # ex. `npm run lint`, `ruff`, etc.
+```
+
+7. **Pousser la branche LOT vers le remote**
+
+Première fois :
+
+```bash
+git push -u origin lot/1.4.0-001
+```
+
+Ensuite (commits supplémentaires) :
+
+```bash
+git push
+```
+
+8. **Ouvrir la PR/MR depuis la branche LOT vers `main`**
+
+- Se faire sur la plateforme distante (GitHub, GitLab, etc.) en choisissant :
+  - base : `main`,
+  - compare/source : `lot/1.4.0-001`.
+- La revue et la CI se déroulent sur cette PR/MR.
+
+9. **Après merge de la PR/MR vers `main`**
+
+Récupérer l’état à jour localement :
+
+```bash
+git checkout main
+git pull origin main
+```
+
+Optionnel : supprimer la branche LOT devenue inutile :
+
+```bash
+git branch -d lot/1.4.0-001
+git push origin --delete lot/1.4.0-001
+```
+
+10. **Tagger la version associée au LOT (si applicable)**
+
+Si `LOT-001` clôture la version `1.4.0` (ou participe à une release
+immédiatement déclenchée) :
+
+```bash
+git checkout main
+git tag -a v1.4.0 -m "Release v1.4.0"
+git push origin v1.4.0
+```
+
+Le pipeline de release/déploiement associé au tag est décrit dans
+`docs/04_exploitation/deploiement.md`.
+
 Ce mode mono-LOT constitue le **happy path recommandé**. Des scénarios plus avancés
 (LOTS en parallèle, branches par type d’artefact, etc.) pourront être ajoutés ou adaptés
 par projet, tant qu’ils restent cohérents avec la roadmap, les plans de version et les

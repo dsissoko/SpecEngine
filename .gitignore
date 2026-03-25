@@ -4,3 +4,6 @@ docs/dial
 
 # Répertoire temporaire racine
 tmp/
+
+# Répertoires temporaires dans la documentation
+docs/temp/
