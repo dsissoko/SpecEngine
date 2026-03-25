@@ -29,6 +29,7 @@ jobs:
             AGENTS.md \
             CONVENTIONS.md \
             README.md \
+            README.template.md \
             agents \
             docs \
             infra \
@@ -42,4 +43,3 @@ jobs:
           files: dist/specengine-template-${{ steps.meta.outputs.version }}.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

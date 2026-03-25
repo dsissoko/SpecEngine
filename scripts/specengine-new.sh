@@ -156,6 +156,11 @@ find "$DEST_DIR" -type f -print0 | while IFS= read -r -d '' file; do
     "$file" && rm -f "${file}.bak"
 done
 
+# If a project README template exists, use it as the main README
+if [[ -f "$DEST_DIR/README.template.md" ]]; then
+  mv -f "$DEST_DIR/README.template.md" "$DEST_DIR/README.md"
+fi
+
 if command -v git >/dev/null 2>&1; then
   echo "Initialising Git repository..."
   (
