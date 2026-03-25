@@ -112,8 +112,11 @@ if [[ "$DEST_DIR" != "." ]]; then
     mkdir -p "$DEST_DIR"
   fi
 else
-  # Current directory: user is responsible for ensuring it is appropriate.
-  :
+  # Current directory: must be empty to avoid accidental overwrite.
+  if [[ -n "$(ls -A "$DEST_DIR")" ]]; then
+    echo "Error: current directory is not empty. Please run in an empty directory or provide a DEST_DIR." >&2
+    exit 1
+  fi
 fi
 
 echo "Creating SpecEngine project in '$DEST_DIR'..."
