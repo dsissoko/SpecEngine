@@ -22,14 +22,54 @@ repository for `__ORG_NAME__` (humans and AI).
 
 ---
 
+### Global rule for artefact changes
+
+Any artefact in this repository (`docs/*`, `src/`, `infra/`, `tests/`,
+`agents/`, etc.) may be improved by agents to increase consistency,
+clarity or correctness.
+
+However, agents must never apply changes to files silently. For any
+non-trivial change to any file, the agent must:
+
+- make the intended modifications explicit (for example by showing the
+  proposed text or describing the patch), and
+- wait for explicit human approval before applying the change.
+
+This rule applies to all artefacts; it is stricter for documentation
+that serves as a primary source of truth, as detailed below.
+
 ## 2. Priorities and Protected Areas
 
 - Do not modify `docs/00_vision` and `docs/01_product` without explicit human approval.
+  At each interaction with a human, the agent must:
+  - quickly assess whether the newly provided information materially changes
+    the product vision, product scope, features, or high-level design, and
+  - if it does, propose concrete documentation updates (showing the new content)
+    and ask for explicit approval before changing these documents.
+  Minor, local or transient clarifications that do not change the persistent
+  product model must not trigger documentation proposals unless the human
+  explicitly asks for it.
 - Always read:
   - `docs/01_product/specifications.md` to understand features (`FEAT-xxxx`),
   - `docs/02_design/*` to understand functional blocks, subsystems and interfaces.
 - Never delete or rename a file in `docs/` without updating links
   and the documentation structure.
+
+- Before starting structured work on project artefacts
+  (features `FEAT-…`, blocks `BF-…`, subsystems `LS-…`,
+  technical artefacts `TS-…`, delivery batches `LOT-…`,
+  and related changes under `src/`, `infra/`, `tests/` or
+  `docs/02_*` / `docs/03_*` / `docs/04_*`), the agent must:
+  - read `docs/00_vision/product_brief.md`,
+    `docs/00_vision/project_scoping_note.md` and
+    `docs/01_product/specifications.md`,
+  - check that these documents are not empty placeholders
+    and contain enough project-specific content to guide
+    functional, software and technical decisions.
+- If these vision / product documents are missing, empty
+  or clearly incompatible with the planned work,
+  the agent is allowed to stop and ask for clarification
+  before proceeding with significant changes.
 
 ---
 
@@ -98,22 +138,60 @@ from the documents to the code.
 
 1. Read `docs/00_vision` and `docs/01_product/specifications.md`
    to understand the product and features.
-2. Read `docs/02_design/*` to identify:
+
+2. Establish the project documentation language:
+
+   - If the documentation language is already declared in `CONVENTIONS.md`
+     (for example: `Documentation language: fr-FR`), use that language
+     for all project documentation under `docs/*`, unless the human explicitly
+     requests another language for a specific change.
+
+   - If the documentation language is **not** declared yet, the agent must:
+     - infer a candidate language from the human’s messages and any existing
+       content under `docs/*`,
+     - explicitly ask the human to confirm or override this language choice
+       (for example: “I detect French as your working language; do you want
+       project documentation in French, or another language?”),
+     - once the human confirms, propose a small update to `CONVENTIONS.md`
+       that records the chosen documentation language, and wait for approval
+       before applying it.
+
+   Until this handshake is done and written down, the agent must not assume
+   a persistent documentation language for the project.
+
+3. For every new human input, perform a lightweight impact check:
+   - If the information is substantial and structured (for example:
+     new product vision, new features, changes to trading modes,
+     new subsystems, new TS/LS/BF), and would change persistent project
+     artefacts, the agent must:
+       - identify which documentation files and sections are impacted
+         (`docs/00_vision`, `docs/01_product`, `docs/02_design/*`,
+          `docs/03_delivery`, `docs/04_operations`),
+       - draft the corresponding changes (proposed text),
+       - present them to the human and **wait for explicit approval**
+         before applying any modification.
+   - If the information is minor, local, or transient (for example:
+     a one-off parameter for a test run, a small wording preference),
+     the agent should not propose documentation updates, unless the
+     human explicitly asks for documentation changes.
+   Documentation must never be changed silently based on new human input.
+
+4. Read `docs/02_design/*` to identify:
    - functional blocks (`BF-…`),
    - logical subsystems (`LS-…`),
    - technical subsystems / artefacts (`TS-…`),
    - functional interfaces (`IF-BF-…`),
    - software interfaces (`IF-LS-…`),
    - technical interfaces (`IF-TS-…`).
-3. Read the plan for the relevant version (`docs/03_delivery/plan_X.Y.md`)
+5. Read the plan for the relevant version (`docs/03_delivery/plan_X.Y.md`)
    to understand the batches (`LOT-…`) and the testing strategy.
-4. Read `docs/04_operations/*` to understand:
+6. Read `docs/04_operations/*` to understand:
    - deployment targets and technical components (`TS-…`),
    - pipelines and automation jobs (`TS-…`),
    - run/operations requirements.
-5. Generate code / infra / tests **only within the explicitly requested scope**,
+7. Generate code / infra / tests **only within the explicitly requested scope**,
    reusing existing IDs and structure.
-6. Whenever the work creates or changes an artefact (`FEAT`, `BF`, `LS`,
+8. Whenever the work creates or changes an artefact (`FEAT`, `BF`, `LS`,
    `TS`, `IF-*`, `LOT`, or an operations procedure), update the relevant
    index location in `docs/01_product`, `docs/02_design`, `docs/03_delivery`
    or `docs/04_operations` so that the global artefact index stays complete

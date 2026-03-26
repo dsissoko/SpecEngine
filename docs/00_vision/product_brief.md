@@ -25,3 +25,17 @@ Describe who the product is for and what it is not.
 ## 5. Operating Principle
 Describe, at a conceptual and non‑technical level,
 how the product works end‑to‑end.
+
+---
+
+## 6. Minimal completeness for agents
+
+For agents (humans or AI) to use this document as an input
+for structured work on the project (features `FEAT-…`,
+blocks `BF-…`, subsystems `LS-…`, technical artefacts `TS-…`,
+delivery batches `LOT-…`, etc.), sections 1–5 above must contain
+real, project-specific content (not only placeholder text).
+
+If this is not the case, an agent is allowed to stop and ask
+for clarification before proceeding with significant functional,
+software or infrastructure decisions.

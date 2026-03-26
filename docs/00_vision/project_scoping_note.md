@@ -57,3 +57,21 @@ Identify main risks:
 
 ## 7. Success Criteria
 Define the conditions under which the project is considered successful.
+
+---
+
+## Minimal scoping for agents
+
+For agents (humans or AI) to rely on this scoping note when
+making structural choices (architecture, deployment model,
+infrastructure, data strategy, etc.), it must clearly state at least:
+
+- the main execution context (cloud / on‑premise / embedded / hybrid),
+- the main types of environments (dev / test / prod, or others),
+- any hard constraint that would forbid some technical options
+  (for example: no permanent internet access, strict data locality,
+  specific hardware constraints, etc.).
+
+If these elements are missing or contradictory with the product brief,
+an agent is allowed to stop and ask for clarification before
+proceeding with structural work.

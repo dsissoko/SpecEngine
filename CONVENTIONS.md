@@ -3,6 +3,8 @@
 This file describes the **working processes** and **format/quality standards**
 shared by humans and agents on the `__PROJECT_NAME__` project for `__ORG_NAME__`.
 
+Documentation language: __TO_BE_DEFINED__
+
 ---
 
 ## 1. Work processes
@@ -12,7 +14,7 @@ shared by humans and agents on the `__PROJECT_NAME__` project for `__ORG_NAME__`
   - product specification in `docs/01_product`,
   - product roadmap by version in `docs/01_product/ROADMAP.md`,
   - design in `docs/02_design`,
-  - per‑version delivery plans in `docs/03_delivery/plan_X.Y.md`,
+  - per-version delivery plans in `docs/03_delivery/plan_X.Y.md`,
   - operations in `docs/04_operations`.
 - Every artefact managed in the repository (`docs/*`, `src/`, `infra/`, `tests/`,
   `agents/`, etc.) follows the same lifecycle:
@@ -20,7 +22,7 @@ shared by humans and agents on the `__PROJECT_NAME__` project for `__ORG_NAME__`
     must be done in a dedicated Git branch,
   - that branch is reviewed via a PR/MR,
   - and only then merged into the main branch and included in a release tag.
-  No “out‑of‑Git” change is allowed.
+  No “out-of-Git” change is allowed.
 - Any significant change to `src/`, `infra/`, `tests/` must:
   - be justified by a change in the input artefacts (`FEAT`, `BF`, `LS`, `TS`, `LOT`),
   - respect the logical order: **docs → plan → implementation → tests**.
@@ -30,11 +32,188 @@ shared by humans and agents on the `__PROJECT_NAME__` project for `__ORG_NAME__`
 
 - Each `LOT-…` in a version plan file (`docs/03_delivery/plan_X.Y.md`) must:
   - be linked to at least one SemVer version (`X.Y.Z`),
-  - be aligned with a macro‑version `X.Y` described in the roadmap (`ROADMAP.md`)
+  - be aligned with a macro-version `X.Y` described in the roadmap (`ROADMAP.md`)
     when the work is related to product evolution,
   - the version may designate:
     - either an **already deployed version** (bug, incident, rollback),
     - or a **new version to prepare / deploy** (product evolution, new release).
+
+### 1.1 Interactive docs-first behaviour
+
+When working interactively with a human (chat / TUI / CLI agents):
+
+- Agents must treat `docs/` as the primary, persistent source of truth.
+- Any non-trivial change to any file in the repository (`docs/*`, `src/`,
+  `infra/`, `tests/`, `agents/`, etc.) must go through an explicit
+  propose → review → approve loop:
+  - the agent makes the intended change explicit (proposed text or patch),
+  - the human validates or rejects the proposal,
+  - only then can the agent apply the change.
+
+In particular, whenever a human provides substantial, structured information
+that changes the product vision, product scope, features, high-level design
+or operations model (for example: new or updated product description,
+new FEATs, new LS/TS/BF, new execution modes):
+
+- the agent must first perform a lightweight impact check on the documentation
+  (`docs/00_vision`, `docs/01_product`, `docs/02_design/*`,
+   `docs/03_delivery`, `docs/04_operations`),
+- draft concrete documentation updates (proposed text or diffs),
+- present these proposals to the human and **wait for explicit approval**
+  before applying any changes.
+
+Minor, local or transient clarifications (for example: one-off parameters
+for a test, small wording preferences) should lead to simpler proposals,
+but must still be presented and approved before being applied.
+
+No change to any file may be performed silently based on new human input.
+
+## 2. Build / Release / Operate FSMs
+
+This section formalises the high-level order described in §1
+(**docs → plan → implementation → tests**) as three simple
+finite-state machines (FSMs): Build, Release and Operate.
+
+Each FSM state defines:
+- what the phase is for,
+- which artefacts it reads (inputs),
+- which artefacts it produces or updates (outputs).
+
+### 2.1 Build FSM
+
+The Build flow turns ideas into a tested candidate release.
+
+**States**
+
+1. **Vision**
+   - Purpose: clarify the “why”, the business context and the value proposition.
+   - Main inputs: `docs/00_vision/*` (existing content, if any).
+   - Main outputs: updated `product_brief.md`, `project_scoping_note.md`.
+
+2. **Product**
+   - Purpose: define actors, business concepts and features (`FEAT-…`), and plan them by version.
+   - Main inputs: `docs/00_vision/*`, current `docs/01_product/specifications.md`, `docs/01_product/ROADMAP.md`.
+   - Main outputs:
+     - updated `specifications.md` (actors, concepts, FEAT),
+     - updated `ROADMAP.md` (macro-versions `X.Y` and associated FEAT),
+     - feature detail files under `docs/01_product/features/` when needed.
+
+3. **Design**
+   - Purpose: structure the system into business blocks, logical subsystems and technical artefacts.
+   - Main inputs: `docs/01_product/*`, existing design docs under `docs/02_design/*`.
+   - Main outputs:
+     - updated `functional_architecture.md` (BF, `IF-BF-…`),
+     - updated `software_architecture.md` (LS, `IF-LS-…`),
+     - updated `technical_architecture.md` (TS, `IF-TS-…`),
+     - updated `tech_stack.md`, `data_model.md`,
+     - initial skeletons / updates in `docs/04_operations/*` when design decisions impact operations.
+
+4. **Plan**
+   - Purpose: organise work into delivery batches (`LOT-…`) per version.
+   - Main inputs: roadmap (`docs/01_product/ROADMAP.md`), design docs (`docs/02_design/*`),
+     existing version plans (`docs/03_delivery/plan_X.Y.md`).
+   - Main outputs:
+     - updated `docs/03_delivery/plan_X.Y.md`,
+     - defined `LOT-…` entries with their FEAT/LS/TS/IF-* scope and testing strategy.
+
+5. **Code**
+   - Purpose: implement the behaviour and local tests for the selected LOTs.
+   - Main inputs: `LOT-…` in `docs/03_delivery/plan_X.Y.md`, design docs (`docs/02_design/*`),
+     tech stack, existing code (`src/`), infra (`infra/`), tests (`tests/`).
+   - Main outputs:
+     - updated application code in `src/`,
+     - updated or new tests in `tests/`,
+     - updated infra / CI/CD files in `infra/` if the LOT includes TS work,
+     - updated documentation where needed to keep the artefact index in sync.
+
+**LOT and Git**
+
+- Each `LOT-…` is implemented on its own Git branch as described in §1.3.
+- The Build FSM is always executed **within** the scope of one or more LOTs.
+
+### 2.2 Release FSM
+
+The Release flow promotes Build artefacts into an approved release `vX.Y.Z`.
+
+**States**
+
+1. **Select**
+   - Purpose: choose a candidate version `vX.Y.Z` to release.
+   - Inputs: merged LOT branches on `main`, `docs/03_delivery/plan_X.Y.md`,
+     test results, CI pipeline status.
+   - Outputs: decision record (which version, which LOTs are in scope).
+
+2. **Qualify**
+   - Purpose: ensure the candidate meets quality, performance, security and compliance criteria.
+   - Inputs: test suites, quality gates, non-functional requirements, security guidelines.
+   - Outputs: test reports, quality reports, updated documentation if qualification
+     reveals gaps (for example in `docs/02_design` or `docs/04_operations`).
+
+3. **Schedule**
+   - Purpose: decide where and when to roll out the approved version.
+   - Inputs: deployment topology, environment strategy (dev / test / prod, blue-green, canary, etc.),
+     existing `docs/04_operations/deployment.md`.
+   - Outputs: updated deployment plan in `docs/04_operations/deployment.md`
+     (environments, sequence, rollback strategy).
+
+4. **Approve**
+   - Purpose: formally approve the release for operations.
+   - Inputs: outcomes of Select / Qualify / Schedule, risk analysis.
+   - Outputs:
+     - an approved tag `vX.Y.Z` on Git,
+     - any required updates in `docs/03_delivery/plan_X.Y.md` and `docs/04_operations/*`
+       to reflect the release decision.
+
+### 2.3 Operate FSM
+
+The Operate flow runs and manages an approved release in live environments.
+
+**States**
+
+1. **Provision**
+   - Purpose: prepare or update technical artefacts (`TS-…`) and base infrastructure.
+   - Inputs: `TS-…` definitions, `docs/02_design/technical_architecture.md`,
+     `docs/02_design/tech_stack.md`, `docs/04_operations/deployment.md`.
+   - Outputs:
+     - updated infra definitions under `infra/`,
+     - updated `docs/04_operations/deployment.md` and related operational docs.
+
+2. **Deploy**
+   - Purpose: deploy an approved release `vX.Y.Z` to environments.
+   - Inputs: tags `vX.Y.Z`, CI/CD configuration, deployment procedures.
+   - Outputs:
+     - deployed release instances,
+     - updated deployment history and procedures in `docs/04_operations/deployment.md`.
+
+3. **Configure**
+   - Purpose: apply and adjust runtime configuration.
+   - Inputs: deployed release, configuration policies, security rules,
+     `docs/04_operations/configuration.md`.
+   - Outputs:
+     - concrete runtime configuration (config files, env vars, secrets, flags),
+     - updated `docs/04_operations/configuration.md` and security guidelines.
+
+4. **Observe**
+   - Purpose: monitor health, performance and usage.
+   - Inputs: running systems, SLO/SLA definitions, `docs/04_operations/monitoring.md`.
+   - Outputs:
+     - metrics, logs, traces, dashboards,
+     - updated observability runbooks in `docs/04_operations/monitoring.md`.
+
+5. **Recover**
+   - Purpose: handle incidents, degradations and rollbacks (often via `LOT-OPS-…`).
+   - Inputs: incident reports, telemetry, current configuration,
+     `docs/04_operations/incident_resolution.md`, `docs/04_operations/security.md`.
+   - Outputs:
+     - applied fixes or rollbacks,
+     - updated incident runbooks, security procedures and post-mortems,
+     - new or updated `LOT-OPS-…` entries when structural changes are needed.
+
+These FSMs are the process backbone for both humans and agents.
+Agents must always know in which flow and state they operate
+(e.g. `Build/Design`, `Build/Code`, `Operate/Deploy`) and must only
+change artefacts that are consistent with that state and with the
+LOT scope described in §1.
 
 ### 1.2 Process use cases (all via LOT)
 
@@ -322,14 +501,28 @@ The roles below can be held by humans, agents, or a mix of both.
 
 ### 2.1 Documentation (`docs/`)
 
-- Default language: **English**.
-- Format:
-  - Simple Markdown (headings `#`, `##`, lists, tables),
-  - tables marked “Recommended format” contain **examples** to adapt,
-  - identifiers (`FEAT-…`, `BF-…`, `LS-…`, `TS-…`, `LOT-…`) must be used as‑is.
-- Style:
-  - short sentences, focused on “what to do / know”,
-  - avoid fluff, favour lists and tables.
+- Meta/config files (`README.md`, `AGENTS.md`, `CONVENTIONS.md`, `agents/*`)
+  are written in English.
+- Project documentation under `docs/*` is written in the **project
+  documentation language**, which must be explicitly declared once per project
+  in this file (for example: `Documentation language: __TO_BE_DEFINED__`).
+
+Agents must:
+
+- use the declared project documentation language for all new or updated
+  content under `docs/*`, unless the human explicitly requests another
+  language for a specific change;
+- if no documentation language is declared yet, perform the language handshake
+  described in `AGENTS.md` before creating or rewriting project documentation.
+
+Format:
+- Simple Markdown (headings `#`, `##`, lists, tables),
+- tables marked “Recommended format” contain **examples** to adapt,
+- identifiers (`FEAT-…`, `BF-…`, `LS-…`, `TS-…`, `LOT-…`) must be used as‑is.
+
+Style:
+- short sentences, focused on “what to do / know”,
+- avoid fluff, favour lists and tables.
 
 ### 2.2 Code (`src/`)
 

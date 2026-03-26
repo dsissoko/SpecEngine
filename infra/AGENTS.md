@@ -35,6 +35,18 @@ If any of these elements is missing:
 → No infra code generation  
 → Explicit, targeted information request
 
+In addition to these technical elements, the agent must have
+checked that:
+
+- the product vision files
+  (`docs/00_vision/product_brief.md`,
+   `docs/00_vision/project_scoping_note.md`)
+  and the product specifications
+  (`docs/01_product/specifications.md`)
+  are non-empty and give enough context so that the planned
+  infrastructure (type of hosting, environment model, etc.)
+  makes sense with respect to the described product.
+
 ---
 
 ## 3. Blocking IaC Checklist
