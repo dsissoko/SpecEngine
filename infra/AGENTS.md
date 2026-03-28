@@ -35,6 +35,18 @@ If any of these elements is missing:
 → No infra code generation  
 → Explicit, targeted information request
 
+In addition to these technical elements, the agent must have
+checked that:
+
+- the product vision files
+  (`docs/00_vision/product_brief.md`,
+   `docs/00_vision/project_scoping_note.md`)
+  and the product specifications
+  (`docs/01_product/specifications.md`)
+  are non-empty and give enough context so that the planned
+  infrastructure (type of hosting, environment model, etc.)
+  makes sense with respect to the described product.
+
 ---
 
 ## 3. Blocking IaC Checklist
@@ -78,16 +90,21 @@ No speculation.
 
 ---
 
-## 6. Relation with Roadmap and LOTs
+## 6. Relation with Roadmap, User Stories and LOTs
 
 `TS-…` artefacts manipulated under `infra/` must:
 
-- Be referenced in the roadmap
-- Be explicitly included in a `LOT-…`
+- Be defined in the design / operations documentation
+  (at minimum in `docs/02_design/technical_architecture.md`
+  and, when relevant, in `docs/04_operations/*`).
+- Be covered by one or more user stories (`US-…`) that:
+  - appear in `docs/01_product/ROADMAP.md` for a given version `X.Y`,
+  - are explicitly included in a `LOT-…` in `docs/03_delivery/plan_X.Y.md`.
 
 A LOT cannot be implicitly enriched with infra dependencies.
 
-Any technical dependency must be explicitly added to the roadmap.
+Any new or changed `TS-…` must be justified by explicit updates
+to the corresponding user stories (`US-…`) and design/ops docs.
 
 ---
 

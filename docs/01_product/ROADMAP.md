@@ -20,10 +20,10 @@ per‑version delivery plans in `docs/03_delivery/plan_X.Y.md`.
 
 Recommended format — rows below are illustrative examples:
 
-| Version (X.Y) | Main objectives                      | Capacity / key FEATs (IDs)            | Notes                  |
+| Version (X.Y) | Main objectives                      | User stories (US-…)                    | Notes                  |
 |---------------|--------------------------------------|----------------------------------------|------------------------|
-| 1.4           | Improve catalogue discovery          | FEAT-0001 (search), FEAT-0002…        | MVP advanced search    |
-| 1.5           | Optimise checkout funnel             | FEAT-0010, FEAT-0011                  |                        |
+| 1.4           | Improve catalogue discovery          | US-0001, US-0002                       | MVP advanced search    |
+| 1.5           | Optimise checkout funnel             | US-0010, US-0011                       |                        |
 | ...           | ...                                  | ...                                    | ...                    |
 
 ---
@@ -34,4 +34,4 @@ Recommended format — rows below are illustrative examples:
   described in a dedicated plan file `docs/03_delivery/plan_X.Y.md`.
 - Each `LOT-…` indicates:
   - the **target or impacted** version (`X.Y.Z`),
-  - the relevant `FEAT` and optionally `LS`/`TS`.
+  - the relevant user stories (`US-…`).

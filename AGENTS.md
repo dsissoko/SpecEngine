@@ -17,19 +17,59 @@ repository for `__ORG_NAME__` (humans and AI).
   while respecting the project conventions.
 - Agents are also responsible for **maintaining the artefact index**:
   at every step of Build / Release / Operate, any new or updated
-  `FEAT`, `BF`, `LS`, `TS`, `IF-*` or `LOT` must be properly referenced
+  `US`, `EPIC`, `ROLE`, `LS`, `TS` or `LOT` must be properly referenced
   in the corresponding documentation files under `docs/`.
 
 ---
 
+### Global rule for artefact changes
+
+Any artefact in this repository (`docs/*`, `src/`, `infra/`, `tests/`,
+`agents/`, etc.) may be improved by agents to increase consistency,
+clarity or correctness.
+
+However, agents must never apply changes to files silently. For any
+non-trivial change to any file, the agent must:
+
+- make the intended modifications explicit (for example by showing the
+  proposed text or describing the patch), and
+- wait for explicit human approval before applying the change.
+
+This rule applies to all artefacts; it is stricter for documentation
+that serves as a primary source of truth, as detailed below.
+
 ## 2. Priorities and Protected Areas
 
 - Do not modify `docs/00_vision` and `docs/01_product` without explicit human approval.
+  At each interaction with a human, the agent must:
+  - quickly assess whether the newly provided information materially changes
+    the product vision, product scope, user stories, or high-level design, and
+  - if it does, propose concrete documentation updates (showing the new content)
+    and ask for explicit approval before changing these documents.
+  Minor, local or transient clarifications that do not change the persistent
+  product model must not trigger documentation proposals unless the human
+  explicitly asks for it.
 - Always read:
-  - `docs/01_product/specifications.md` to understand features (`FEAT-xxxx`),
-  - `docs/02_design/*` to understand functional blocks, subsystems and interfaces.
+  - `docs/01_product/specifications.md` to understand roles, epics and user stories,
+  - `docs/02_design/*` to understand subsystems, technical artefacts and data model.
 - Never delete or rename a file in `docs/` without updating links
   and the documentation structure.
+
+- Before starting structured work on project artefacts
+  (user stories `US-…`, epics `EPIC-…`, subsystems `LS-…`,
+  technical artefacts `TS-…`, delivery batches `LOT-…`,
+  and related changes under `src/`, `infra/`, `tests/` or
+  `docs/02_*` / `docs/03_*` / `docs/04_*`), the agent must:
+  - read `docs/00_vision/product_brief.md`,
+    `docs/00_vision/project_scoping_note.md` and
+    `docs/01_product/specifications.md`,
+  - check that these documents are not empty placeholders
+    and contain enough project-specific content to guide
+    functional, software and technical decisions.
+- If these vision / product documents are missing, empty
+  or clearly incompatible with the planned work,
+  the agent is allowed to stop and ask for clarification
+  before proceeding with significant changes.
 
 ---
 
@@ -37,14 +77,12 @@ repository for `__ORG_NAME__` (humans and AI).
 
 The following identifiers must be used and considered stable:
 
-- Features: `FEAT-0001`, `FEAT-0002`, … (declared in `specifications.md`).
-- Functional blocks: `BF-…` (in `functional_architecture.md`).
-- Logical subsystems: `LS-…` (in `software_architecture.md`).
-- Technical subsystems / technical artefacts: `TS-…`
-  (in `technical_architecture.md` and `docs/04_operations`).
-- Functional interfaces: `IF-BF-…` (in functional architecture views).
-- Software interfaces: `IF-LS-…` (in software architecture views).
-- Technical interfaces: `IF-TS-…` (in technical architecture views).
+- Roles: `ROLE-…` (in `docs/01_product/roles.md`).
+- Epics: `EPIC-…` (in `docs/01_product/epics.md`).
+- User stories: `US-…` (in `docs/01_product/user_stories/` and referenced from `ROADMAP.md`).
+- Logical subsystems: `LS-…` (in `docs/02_design/software_architecture.md`).
+- Technical artefacts: `TS-…`
+  (in `docs/02_design/technical_architecture.md` and `docs/04_operations`).
 - Delivery batches: `LOT-…` (in `docs/03_delivery/plan_X.Y.md`).
 
 Agents **must reuse** these IDs in code, infra scripts and tests
@@ -56,19 +94,17 @@ Agents **must reuse** these IDs in code, infra scripts and tests
 
 The only artefact types allowed in the project are:
 
-- `FEAT`
-- `BF`
+- `ROLE`
+- `EPIC`
+- `US`
 - `LS`
 - `TS`
-- `IF-BF`
-- `IF-LS`
-- `IF-TS`
 - `LOT`
 
 This list is **closed**.
 
 It is forbidden to introduce any new type or subtype, including but not limited to:
-`TS-only`, `TECH`, `INFRA`, `BACKEND`, `FRONT`, `FEAT+TS`, `IF-OPS`, etc.
+`TECH`, `INFRA`, `BACKEND`, `FRONT`, `US+TS`, etc.
 
 The nature of an element is determined **only** by its identifier.
 No extra “type” field is allowed.
@@ -82,9 +118,9 @@ Code should reflect the documentation structure as much as possible:
 - Organisation by subsystems / blocks:
   - `src/<subsystem>/...` where `<subsystem>` is derived from the logical ID
     (`LS-SERVICE-CATALOGUE` → `service_catalogue`).
-- Link with features:
-  - Module / class names may reference the feature ID
-    (e.g. `feature_FEAT_0001_search.py`).
+- Link with user stories:
+  - Module / class names may reference the user story ID
+    (e.g. `feature_US_0001_search.py`).
 - Link with interfaces:
   - Adapters / endpoints may include the interface ID
     (e.g. `if_ls_0001_public_api.ts` for a software interface).
@@ -97,24 +133,75 @@ from the documents to the code.
 ## 5. Recommended Workflow for an AI Agent
 
 1. Read `docs/00_vision` and `docs/01_product/specifications.md`
-   to understand the product and features.
-2. Read `docs/02_design/*` to identify:
-   - functional blocks (`BF-…`),
+   to understand the product, roles, epics and user stories.
+
+2. Establish the project documentation language:
+
+   - If the documentation language is already declared in `CONVENTIONS.md`
+     (for example: `Documentation language: fr-FR`), use that language
+     for all project documentation under `docs/*`, unless the human explicitly
+     requests another language for a specific change.
+
+   - If the documentation language is **not** declared yet, the agent must:
+     - infer a candidate language from the human’s messages and any existing
+       content under `docs/*`,
+     - explicitly ask the human to confirm or override this language choice
+       (for example: “I detect French as your working language; do you want
+       project documentation in French, or another language?”),
+     - once the human confirms, propose a small update to `CONVENTIONS.md`
+       that records the chosen documentation language, and wait for approval
+       before applying it.
+
+   Until this handshake is done and written down, the agent must not assume
+   a persistent documentation language for the project.
+
+   After the documentation language has been chosen and written to
+   `CONVENTIONS.md`, the agent must, at the beginning of each new interactive
+   session:
+   - reread `CONVENTIONS.md` to confirm the reference documentation language;
+   - scan a representative sample of project documentation under `docs/*`
+     (excluding meta/config files such as `README.md`, `AGENTS.md`,
+     `CONVENTIONS.md`, `agents/*`) to detect sections still written in
+     another language;
+   - if significant discrepancies are detected (for example, systematic mixing
+     of French and English in main sections), propose to the human a
+     normalisation plan to translate these parts into the chosen documentation
+     language, grouped into reasonable batches, and present this plan before
+     starting new work on `src/`, `infra/` or `tests/`;
+   - only perform the translations after explicit approval, following the
+     usual propose → review → approve loop for each batch of changes.
+
+3. For every new human input, perform a lightweight impact check:
+   - If the information is substantial and structured (for example:
+     new product vision, new features, changes to trading modes,
+     new subsystems, new TS/LS), and would change persistent project
+     artefacts, the agent must:
+       - identify which documentation files and sections are impacted
+         (`docs/00_vision`, `docs/01_product`, `docs/02_design/*`,
+          `docs/03_delivery`, `docs/04_operations`),
+       - draft the corresponding changes (proposed text),
+       - present them to the human and **wait for explicit approval**
+         before applying any modification.
+   - If the information is minor, local, or transient (for example:
+     a one-off parameter for a test run, a small wording preference),
+     the agent should not propose documentation updates, unless the
+     human explicitly asks for documentation changes.
+   Documentation must never be changed silently based on new human input.
+
+4. Read `docs/02_design/*` to identify:
    - logical subsystems (`LS-…`),
    - technical subsystems / artefacts (`TS-…`),
-   - functional interfaces (`IF-BF-…`),
-   - software interfaces (`IF-LS-…`),
-   - technical interfaces (`IF-TS-…`).
-3. Read the plan for the relevant version (`docs/03_delivery/plan_X.Y.md`)
+   - key data structures and technology choices.
+5. Read the plan for the relevant version (`docs/03_delivery/plan_X.Y.md`)
    to understand the batches (`LOT-…`) and the testing strategy.
-4. Read `docs/04_operations/*` to understand:
+6. Read `docs/04_operations/*` to understand:
    - deployment targets and technical components (`TS-…`),
    - pipelines and automation jobs (`TS-…`),
    - run/operations requirements.
-5. Generate code / infra / tests **only within the explicitly requested scope**,
+7. Generate code / infra / tests **only within the explicitly requested scope**,
    reusing existing IDs and structure.
-6. Whenever the work creates or changes an artefact (`FEAT`, `BF`, `LS`,
-   `TS`, `IF-*`, `LOT`, or an operations procedure), update the relevant
+8. Whenever the work creates or changes an artefact (`ROLE`, `EPIC`, `US`, `LS`,
+   `TS`, `LOT`, or an operations procedure), update the relevant
    index location in `docs/01_product`, `docs/02_design`, `docs/03_delivery`
    or `docs/04_operations` so that the global artefact index stays complete
    and consistent.
@@ -125,77 +212,73 @@ from the documents to the code.
 
 ### Roadmap (`docs/01_product/ROADMAP.md`)
 
-Allowed format:
+Allowed format: **a single table per file** listing the product versions
+and the user stories included in each version.
+
+Example:
 
 ```md
-## vX.Y
-
-FEAT:
-- FEAT-0001
-
-LS:
-- LS-0001
-
-TS:
-- TS-0001
+| Version (X.Y) | Main objectives                                 | User stories (US-…)                                            | Notes                           |
+|---------------|--------------------------------------------------|----------------------------------------------------------------|---------------------------------|
+| 0.1           | Infra foundation (Pulumi, CI/CD, Dokploy)       | US-7001, US-7002, US-7003, US-7004                             | Infra driven by PR/MR + CI/CD  |
+| 0.5           | First functional version of the platform        | US-0001, US-0002, US-0003, US-0004, US-0005                    | Catalogue, sessions, credits    |
 ```
 
 Rules:
 
-- Only `FEAT`, `LS`, `TS` blocks are allowed.
-- Each entry must reference an existing identifier.
-- No free-form fields are allowed (e.g. `Type`, `Category`, `Scope`).
-- No implicit interpretation is allowed.
+- The roadmap contains **exactly one table** at the root level.
+- The first column is `Version (X.Y)` and contains macro‑versions of the form
+  `MAJOR.MINOR` (for example `0.1`, `0.5`).
+- The `User stories (US-…)` column contains only existing `US-…` identifiers, separated by commas.
+- Other columns (`Main objectives`, `Notes`, etc.) are free‑form and
+  intended for humans; agents must not rely on their content for structural
+  reasoning.
+- No extra structured fields (e.g. `Type`, `Category`, `Scope`) are allowed.
+  The nature of an element is determined **only** by its identifier.
 
 ---
 
 ### LOT (`docs/03_delivery/plan_X.Y.md`)
 
-Allowed format:
+Allowed format: **a single table per file** listing the delivery batches
+(`LOT-…`) for a given version and the identifiers they cover.
+
+Example:
 
 ```md
-# Plan vX.Y
-
-## LOT-0001
-
-Content:
-- FEAT-0001
-- LS-0001
-- TS-0001
-- IF-LS-0001
+| LOT ID   | Version (X.Y.Z) | Capabilities (IDs)                                    | Main objective                               | Criticality |
+|---------|------------------|--------------------------------------------------------|----------------------------------------------|------------|
+| LOT-0001| 1.4.0            | US-0001, US-0002                                      | Catalogue MVP                                | High       |
 ```
 
 Rules:
 
-- A LOT is exclusively a list of identifiers.
-- No `Type` field is allowed.
-- No extra categorisation field is allowed.
-- A LOT may only contain existing identifiers.
+- The delivery plan for a version `X.Y` contains **exactly one table** at the root level.
+- The first column is `LOT ID` and contains LOT identifiers (`LOT-0001`, `LOT-0002`, …).
+- The `Version (X.Y.Z)` column contains the **target or impacted SemVer version**
+  (for example `0.1.0`).
+- The `Capabilities (IDs)` column contains only existing user story identifiers
+  `US-…`, separated by commas.
+- Other columns (`Main objective`, `Criticality`, etc.) are free‑form and intended
+  for humans; agents must not rely on their content for structural reasoning.
+- No extra structured fields (e.g. `Type`, `Category`, `Scope`) are allowed.
+  The nature of an element is determined **only** by its identifier.
 
 Computation rule:
 
-A LOT contains exactly the identifiers referenced in the roadmap
+A LOT contains exactly the identifiers that are referenced in the roadmap
 for the corresponding version.
 
 The agent must never:
 
-- infer a type for a LOT,
+- infer a new type for a LOT,
 - enrich a LOT with concepts not present in the roadmap,
-- introduce an intermediate category.
-
-Additional rule for interfaces:
-
-- A given diagram or table must only contain interface IDs
-  from **one** interface type at a time (`IF-BF`, `IF-LS` or `IF-TS`).
-- Mixing several interface types in the same diagram/table is forbidden
-  to avoid ambiguity for agents.
-
----
+- introduce an intermediate categorisation layer.
 
 ## 6. Handling Incomplete Information When Executing a LOT
 
 When implementing a `LOT`, if the information present in the
-`FEAT`, `LS` or `TS` artefacts does not allow implementation
+`US`, `LS` or `TS` artefacts does not allow implementation
 without introducing a new structural element (new service,
 new infrastructure, new technology, new API), the agent may
 refuse to execute the LOT.
@@ -230,14 +313,12 @@ as an output (including possibly the same type).
 
 | Input artefact      | Minimal catalogue content                                                   | Main usage by the agent                                                    | Output artefacts (created or updated)                                       |
 |---------------------|----------------------------------------------------------------------------|----------------------------------------------------------------------------|------------------------------------------------------------------------------|
-| `FEAT-…` (Feature)  | ID, name, simple functional description, link to detailed spec, target `LS` | Know **what** to implement and **in which subsystem** to write code        | Application code (`src/`), related tests (`tests`), small local tech docs, updated feature docs |
-| `BF-…` (Business block) | ID, domain description, business vocabulary, typical entities          | Understand the **business context shared** by several features, speak the right language, avoid mixing domains | Influences domain code structure, naming, business test cases, updated domain glossary/docs |
+| `US-…` (User story) | ID, name, simple functional description, target `LS`/`TS`, roles involved | Know **what** to implement for which user / role and **where** to wire it | Application code (`src/`), related tests (`tests`), infra/CI updates when needed, updated US docs |
+| `EPIC-…` (Epic)     | ID, name, grouped user stories (`US-…`)                                   | Group related user stories into coherent product themes                    | Updated roadmap entries, updated LOT content, possibly multiple `LS`/`TS` updates               |
+| `ROLE-…` (Role)     | ID, label, responsibilities, links to US                                  | Clarify who does what and how they interact with the system               | Updated role descriptions, acceptance criteria in US, test scenarios by role                    |
 | `LS-…` (Logical subsystem) | ID, role, tech/framework, mapping to `src/…`, allowed LS↔LS interactions | Know **where** to implement, with which tech, and which dependencies are allowed | Organisation of `src/`, services/modules, adapters, wiring, integration tests, updated LS documentation |
 | `TS-…` (Technical artefact) | ID, type (cluster, pipeline, broker, …), role/scope, mapping to `infra/` or CI/CD | Generate / update IaC, runtime config, pipelines; understand runtime constraints | `infra/…` files, runtime configs, CI/CD files, operations scripts, updated TS documentation |
-| `IF-BF-…` (Functional interface) | ID, producer/consumer (`BF`), business need, data examples     | Refine the business behaviour of cross‑domain exchanges, inspire end‑to‑end scenarios | Full business scenarios, E2E tests, functional docs for exchanges, updated interface specs |
-| `IF-LS-…` (Software interface)   | ID, source/target (`LS`), call type (HTTP, message…), link to formal spec | Define service contracts (APIs, messages), guide creation of handlers, DTOs, contract tests | Endpoints, DTOs/ports, clients, contract tests, OpenAPI/AsyncAPI specs, updated interface specs |
-| `IF-TS-…` (Technical interface)  | ID, channel (URL, topic, file…), technical parties, QoS/security constraints | Materialise technical channels (routes, topics, queues), guide network/broker config | Network config, ingress, topics/queues, performance/security parameters, updated interface specs |
-| `LOT-…` (Delivery batch) | Batch ID, list of affected `FEAT` (and optionally `LS`/`TS`), goal, criticality | Order the work: define which `FEAT`/`LS`/`TS` to handle together and in which order | Backlog slicing, branch/MR organisation, batch-based testing strategy, updated version plan (`docs/03_delivery/plan_X.Y.md`)       |
+| `LOT-…` (Delivery batch) | Batch ID, list of affected `US`, goal, criticality | Order the work: define which `US` to handle together and in which order | Backlog slicing, branch/MR organisation, batch-based testing strategy, updated version plan (`docs/03_delivery/plan_X.Y.md`)       |
 
 An artefact type can therefore appear both as an input and
 as part of the outputs when it is refined or corrected.

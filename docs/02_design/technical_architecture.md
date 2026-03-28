@@ -49,19 +49,9 @@ Describe technical security mechanisms.
 
 ---
 
-## 9. Technical Interfaces
-This chapter catalogues technical interfaces exposed or consumed by the system
-(`IF-TS-…`).
+## 9. Technical Interfaces (optional)
+If needed, this chapter can catalogue technical interfaces exposed or consumed
+by the system (URLs, topics, queues, files, …).
 
-For each technical interface, use a table with at least
-the following columns (illustrative examples below):
-
-| ID          | Channel type    | Endpoint / Topic / File         | Producer(s) | Consumer(s) | Key constraints (QoS, security, perf…) | Formal spec (link)       | Related BF/LS interfaces |
-|-------------|-----------------|---------------------------------|-------------|-------------|-----------------------------------------|--------------------------|-------------------------|
-| IF-TS-0001  | HTTP            | `https://api.example.com/...`   | LS-API-GW   | External clients | OAuth2 auth, 200ms P95              | `openapi/public-api.yaml`| IF-BF-0001, IF-LS-0001  |
-| ...         | ...             | ...                             | ...         | ...         | ...                                     | ...                      | ...                     |
-
-Technical interfaces described here must be aligned with:
-- stack and infrastructure choices,
-- communication mechanisms,
-- functional and software interface chapters.
+Details (payloads, contracts, QoS) should be documented alongside the
+relevant user stories, subsystems or operations runbooks.

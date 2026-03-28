@@ -7,4 +7,4 @@ This directory contains:
 - test results.
 
 It groups all artefacts used to validate `__PROJECT_NAME__` for `__ORG_NAME__`
-through project `FEAT-…`, `LS-…` and interfaces.
+through project user stories (`US-…`), `LS-…` and interfaces.

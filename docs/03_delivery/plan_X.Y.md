@@ -12,43 +12,39 @@ Examples:
 ---
 
 ## 2. Batch Breakdown (LOTs)
-List the delivery batches, optionally aligned with features / blocks.
+List the delivery batches (`LOT-…`) for this version.
 
-Each batch must specify the **target or impacted SemVer version** (`X.Y.Z`).
+Each batch must specify the **target or impacted SemVer version** (`X.Y.Z`)
+and the list of user stories (`US-…`) it covers.
 
-Recommended format (table) — rows below are illustrative examples:
+Recommended format (single table):
 
-| Lot ID   | Version (X.Y.Z) | Scope (features / blocks)          | Main objective                     | Criticality |
-|---------|------------------|-------------------------------------|------------------------------------|------------|
-| LOT-001 | 1.4.0            | FEAT-0001, FEAT-0002 / BF-CATALOGUE| Catalogue MVP                      | High       |
-| ...     | ...              | ...                                 | ...                                | ...        |
-
----
-
-## 3. Milestones
-Define key milestones (internal, external).
+| Lot ID   | Version (X.Y.Z) | User stories (US-…)                  | Main objective                     | Criticality |
+|---------|------------------|--------------------------------------|------------------------------------|------------|
+| LOT-001 | 1.4.0            | US-0001, US-0002                     | Catalogue MVP                      | High       |
+| ...     | ...              | ...                                  | ...                                | ...        |
 
 ---
 
-## 4. Test Strategy
+## 3. Test Strategy
 This chapter describes the global testing strategy expected for the product.
 
-### 4.1 Test Types
+### 3.1 Test Types
 List the types of tests to be set up, for example:
 - Unit tests
 - Integration tests
 - End‑to‑end tests
 - Contract tests (APIs / messages)
 
-### 4.2 Expected Coverage per Feature / Journey
+### 3.2 Expected Coverage per User Story / Journey
 
 Recommended format (table) — rows below are illustrative examples:
 
-| Feature / Journey  | Expected test types                        | Key business invariants to cover                      |
-|--------------------|--------------------------------------------|-------------------------------------------------------|
-| FEAT-0001          | Unit, Integration, Contract                | Price always positive, stock decremented only once    |
-| Signup journey     | Unit, E2E                                  | Unique email, mandatory GDPR opt‑in                   |
-| ...                | ...                                        | ...                                                   |
+| User story / Journey | Expected test types                        | Key business invariants to cover                      |
+|----------------------|--------------------------------------------|-------------------------------------------------------|
+| US-0001              | Unit, Integration, Contract                | Price always positive, stock decremented only once    |
+| Signup journey       | Unit, E2E                                  | Unique email, mandatory GDPR opt‑in                   |
+| ...                  | ...                                        | ...                                                   |
 
 Information in this table should guide the structure of the `tests/`
 directory and the design of automated suites.

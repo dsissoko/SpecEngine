@@ -9,12 +9,12 @@ Main files and directories:
 
 - `docs/`: product and technical documentation structured by phase:
   - `00_vision/`: vision, scoping, context.
-  - `01_product/`: functional specification (`specifications.md`) and roadmap (`ROADMAP.md`).
-  - `02_design/`: functional, software and technical design, data model, tech stack.
+  - `01_product/`: product specification (`specifications.md`) and roadmap (`ROADMAP.md`).
+  - `02_design/`: software and technical design, data model, tech stack.
   - `03_delivery/plan_X.Y.md`: per‑version plans with batches (`LOT-…`) and testing strategy.
   - `04_operations/`: deployment, configuration, monitoring, incidents.
 - `CONVENTIONS.md`: working processes + common format/quality standards.
-- `AGENTS.md`: agent constitution (how to read `docs/`, use `FEAT/BF/LS/TS/LOT`, etc.).
+- `AGENTS.md`: agent constitution (how to read `docs/`, use `ROLE/EPIC/US/LS/TS/LOT`, etc.).
 - `src/`: application code.
 - `infra/`: infrastructure as code and CI/CD configuration.
 - `tests/`: automated test suites.
@@ -29,14 +29,12 @@ two orchestration modes and how they drive the Build / Release / Operate flows.
 
 Core artefact types (see `AGENTS.md` for the formal index):
 
-- `FEAT-…` — Features (product capabilities).  
-- `BF-…` — Business (functional) blocks.  
+- `ROLE-…` — Roles (actors).  
+- `EPIC-…` — Epics (large product themes grouping user stories).  
+- `US-…` — User stories (primary unit of delivery).  
 - `LS-…` — Logical software subsystems.  
 - `TS-…` — Technical artefacts (clusters, pipelines, brokers, …).  
-- `IF-BF-…` — Functional interfaces between `BF` blocks.  
-- `IF-LS-…` — Software interfaces between `LS` subsystems.  
-- `IF-TS-…` — Technical interfaces (channels, endpoints, topics…) linked to `TS`.  
-- `LOT-…` — Delivery batches grouping FEAT/LS/TS for a given version.
+- `LOT-…` — Delivery batches grouping user stories for a given version.
 
 The framework requires **every artefact to be explicitly typed** with one of
 these IDs, and the documentation (`docs/01_product`, `docs/02_design`,
@@ -48,11 +46,10 @@ in the right view.
 
 This index is distributed per activity:
 
-- product view (`docs/01_product`) → FEAT and roadmap entries per version,  
-- functional view (`docs/02_design/functional_architecture.md`) → BF and `IF-BF-…`,  
-- software view (`docs/02_design/software_architecture.md`) → LS and `IF-LS-…`,  
-- technical / operations view (`docs/02_design/technical_architecture.md`, `docs/04_operations/*`) → TS and `IF-TS-…`, deployment/config/monitoring/incident procedures,  
-- delivery view (`docs/03_delivery/plan_X.Y.md`) → LOT and their FEAT/LS/TS/IF-* scope per version and per batch.
+- product view (`docs/01_product`) → roles, epics, user stories and roadmap entries per version,  
+- software view (`docs/02_design/software_architecture.md`) → LS,  
+- technical / operations view (`docs/02_design/technical_architecture.md`, `docs/04_operations/*`) → TS, deployment/config/monitoring/incident procedures,  
+- delivery view (`docs/03_delivery/plan_X.Y.md`) → LOT and their user story scope per version and per batch.
 
 These typed artefacts and their index are described in `docs/` and
 `CONVENTIONS.md`, and serve as structured inputs for both humans and agents
@@ -67,14 +64,13 @@ at every step of the Build / Release / Operate flows.
   - `project_scoping_note.md`: objectives, context, constraints.
 
 - **01_product**  
-  - `specifications.md`: actors, business concepts, FEAT (`FEAT-…`).  
-  - `ROADMAP.md`: product view by version (`X.Y`) and associated FEAT.  
-  - `features/*.md`: per‑feature details.
+  - `specifications.md`: actors, business concepts, roles, epics and user stories (`US-…`).  
+  - `ROADMAP.md`: product view by version (`X.Y`) and associated user stories (`US-…`).  
+  - `user_stories/*.md` (optional): per‑user‑story details.
 
 - **02_design**  
-  - `functional_architecture.md`: business/functional blocks (`BF-…`) + functional interfaces.  
-  - `software_architecture.md`: logical subsystems (`LS-…`) + software interfaces.  
-  - `technical_architecture.md`: technical artefacts (`TS-…`) + technical interfaces.  
+  - `software_architecture.md`: logical subsystems (`LS-…`).  
+  - `technical_architecture.md`: technical artefacts (`TS-…`).  
   - `tech_stack.md`: global stack and per‑`LS`/`TS` stack.  
   - `data_model.md`: data structures.  
   - `c4/`: optional directory dedicated to C4‑model software design.
@@ -93,7 +89,7 @@ at every step of the Build / Release / Operate flows.
 
 - **AGENTS.md**  
   - How agents read `docs/` and `CONVENTIONS.md`.  
-  - How they use `FEAT/BF/LS/TS/LOT` in practice.
+  - How they use `ROLE/EPIC/US/LS/TS/LOT` in practice.
 
 ---
 
@@ -103,10 +99,10 @@ Project activities are organised into three main flows:
 
 - **Build** (create and evolve the product)
   - Vision → clarify the “why” and the context.  
-  - Product → describe features (`FEAT-…`) and the roadmap.  
-  - Design → structure the system into `BF` / `LS` / `TS` and interfaces (`IF-*`).  
-  - Plan → organise the work into `LOT-…` per version (`plan_X.Y.md`).  
-  - Code → implement the LOT artefacts in `src/` and `tests/`.  
+  - Product → describe epics and user stories (`US-…`) and the roadmap.  
+  - Design → structure the system into `LS` / `TS` and supporting data/tech stack.  
+  - Plan → organise the work into `LOT-…` per version (`plan_X.Y.md`), each LOT grouping user stories.  
+  - Code → implement the LOT user stories in `src/` and `tests/`.  
 
 - **Release** (promote build artefacts into deployable releases)
   - Select → choose a candidate version `vX.Y.Z` produced by the Build flow.  
@@ -130,14 +126,14 @@ Project activities are organised into three main flows:
           [*] --> Vision
 
           Vision --> Product: Product vision clarified
-          Product --> Design: FEAT-… identified / ROADMAP drafted
-          Design --> Plan: BF / LS / TS / IF-* structured
+          Product --> Design: US-… identified / ROADMAP drafted
+          Design --> Plan: LS / TS structured
           Plan --> Code: LOT-… defined in plan_X.Y.md
           Code --> [*]: Release candidate vX.Y.Z built & tagged\n(tests OK)
 
           %% Evolution loops inside Build
           Product --> Vision: Strategy / scope change
-          Design --> Product: New FEAT / constraints
+          Design --> Product: New US / constraints
           Plan --> Design: Architecture / scope adjustment
           Code --> Plan: Re-plan required (scope or risk)
       }
@@ -189,10 +185,10 @@ for each flow.
 | Phase    | Purpose                                            | Input artefacts                                      | Output artefacts                                      | Main roles                    |
 |----------|----------------------------------------------------|------------------------------------------------------|-------------------------------------------------------|-------------------------------|
 | Vision   | Clarify why the product exists and its context     | External context, strategy, constraints, existing `docs/00_vision/product_brief.md` and `project_scoping_note.md` | Updated `docs/00_vision/product_brief.md` and `project_scoping_note.md` with clarified vision/scoping | Product / Stakeholders (Human) |
-| Product  | Describe actors, business concepts and FEAT        | Vision docs, existing `docs/01_product/specifications.md` and `ROADMAP.md` | Updated `docs/01_product/specifications.md`, `ROADMAP.md`, created/updated `FEAT-…` and roadmap entries (`X.Y`) | Product, Domain, Orchestrator |
-| Design   | Structure the system into BF / LS / TS and IF-*    | Vision + Product docs, existing design docs in `docs/02_design/*` | Updated `docs/02_design/functional_architecture.md`, `software_architecture.md`, `technical_architecture.md`, `tech_stack.md`, `data_model.md`, created/updated `BF-…`, `LS-…`, `TS-…`, `IF-BF/IF-LS/IF-TS`, initial skeletons of `docs/04_operations/deployment.md`, `configuration.md`, `monitoring.md`, `incident_resolution.md`, `security.md` | Architect, Dev, Orchestrator  |
-| Plan     | Organise work into delivery batches per version    | Roadmap (`X.Y`), existing `BF-…` / `LS-…` / `TS-…` / `IF-*` definitions from `docs/02_design/*`, existing `docs/03_delivery/plan_X.Y.md` | Updated `docs/03_delivery/plan_X.Y.md`, with `LOT-…` and their FEAT/LS/TS/IF-* scope | Orchestrator                  |
-| Code     | Implement behaviour and local tests for the LOT    | `LOT-…`, design docs (BF/LS/TS/IF-*), tech stack, codebase and CI pipeline | Code in `src/`, tests in `tests/`, updated CI config if needed, release candidate `vX.Y.Z` and associated release tags in Git | Dev, QA (with Orchestrator)   |
+| Product  | Describe actors, business concepts, epics and US   | Vision docs, existing `docs/01_product/specifications.md` and `ROADMAP.md` | Updated `docs/01_product/specifications.md`, `ROADMAP.md`, created/updated `EPIC-…` and `US-…` and roadmap entries (`X.Y`) | Product, Domain, Orchestrator |
+| Design   | Structure the system into LS / TS                  | Vision + Product docs, existing design docs in `docs/02_design/*` | Updated `docs/02_design/software_architecture.md`, `technical_architecture.md`, `tech_stack.md`, `data_model.md`, initial skeletons of `docs/04_operations/deployment.md`, `configuration.md`, `monitoring.md`, `incident_resolution.md`, `security.md` | Architect, Dev, Orchestrator  |
+| Plan     | Organise work into delivery batches per version    | Roadmap (`X.Y`), existing LS/TS definitions from `docs/02_design/*`, existing `docs/03_delivery/plan_X.Y.md` | Updated `docs/03_delivery/plan_X.Y.md`, with `LOT-…` and their user story (`US-…`) scope | Orchestrator                  |
+| Code     | Implement behaviour and local tests for the LOT    | `LOT-…`, design docs (LS/TS), tech stack, codebase and CI pipeline | Code in `src/`, tests in `tests/`, updated CI config if needed, release candidate `vX.Y.Z` and associated release tags in Git | Dev, QA (with Orchestrator)   |
 
 **Operate flow — from approved release to day‑to‑day operations**
 
@@ -252,7 +248,7 @@ For non-interactive usage, you can add `--yes` before the project name. For adva
 - A human product/tech lead fills or adapts the documentation:
   - `docs/00_vision`, `docs/01_product`, `docs/02_design`, `CONVENTIONS.md`, `AGENTS.md`.
 - For a target version `X.Y`, the lead creates or updates `docs/03_delivery/plan_X.Y.md`
-  and defines `LOT-…` with their FEAT/LS/TS/IF-* scope and criticality.
+  and defines `LOT-…` with their `US`/`LS`/`TS` scope and criticality.
 - For each active LOT, the lead:
   - creates a dedicated Git branch (`lot/X.Y.Z-XXX`),  
   - implements the required changes in `src/`, `tests/`, `infra/`,  
