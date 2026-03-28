@@ -5,7 +5,7 @@ This repository hosts the `__PROJECT_NAME__` service for `__ORG_NAME__`.
 The project follows a specification‑driven, agent‑friendly workflow:
 
 - **Docs first**: product, design, delivery and operations live under `docs/`.
-- **Typed artefacts**: features (`FEAT-…`), blocks (`BF-…`), subsystems (`LS-…`), tech artefacts (`TS-…`) and batches (`LOT-…`) are explicitly referenced in the docs.
+- **Typed artefacts**: user stories (`US-…`), roles (`ROLE-…`), epics (`EPIC-…`), subsystems (`LS-…`), technical artefacts (`TS-…`) and batches (`LOT-…`) are explicitly referenced in the docs.
 - **Mono‑LOT branches**: each delivery batch (`LOT-…`) is implemented on its own Git branch, then merged via PR/MR.
 
 ## Documentation map

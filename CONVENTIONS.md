@@ -24,10 +24,10 @@ Documentation language: __TO_BE_DEFINED__
   - and only then merged into the main branch and included in a release tag.
   No “out-of-Git” change is allowed.
 - Any significant change to `src/`, `infra/`, `tests/` must:
-  - be justified by a change in the input artefacts (`FEAT`, `BF`, `LS`, `TS`, `LOT`),
+  - be justified by a change in the input artefacts (`US`, `EPIC`, `LS`, `TS`, `LOT`),
   - respect the logical order: **docs → plan → implementation → tests**.
 - Batches (`LOT-…`) are used to organise work:
-  - a batch groups a subset of `FEAT` (and optionally `LS`/`TS`),
+  - a batch groups a subset of user stories (`US-…`),
   - avoid working on too many batches in parallel.
 
 - Each `LOT-…` in a version plan file (`docs/03_delivery/plan_X.Y.md`) must:
@@ -51,9 +51,9 @@ When working interactively with a human (chat / TUI / CLI agents):
   - only then can the agent apply the change.
 
 In particular, whenever a human provides substantial, structured information
-that changes the product vision, product scope, features, high-level design
+that changes the product vision, product scope, user stories, high-level design
 or operations model (for example: new or updated product description,
-new FEATs, new LS/TS/BF, new execution modes):
+new US/EPICs, new LS/TS, new execution modes):
 
 - the agent must first perform a lightweight impact check on the documentation
   (`docs/00_vision`, `docs/01_product`, `docs/02_design/*`,
@@ -91,20 +91,19 @@ The Build flow turns ideas into a tested candidate release.
    - Main outputs: updated `product_brief.md`, `project_scoping_note.md`.
 
 2. **Product**
-   - Purpose: define actors, business concepts and features (`FEAT-…`), and plan them by version.
+   - Purpose: define actors, business concepts, epics (`EPIC-…`) and user stories (`US-…`), and plan them by version.
    - Main inputs: `docs/00_vision/*`, current `docs/01_product/specifications.md`, `docs/01_product/ROADMAP.md`.
    - Main outputs:
-     - updated `specifications.md` (actors, concepts, FEAT),
-     - updated `ROADMAP.md` (macro-versions `X.Y` and associated FEAT),
-     - feature detail files under `docs/01_product/features/` when needed.
+     - updated `specifications.md` (actors, concepts, roles, epics, user stories),
+     - updated `ROADMAP.md` (macro-versions `X.Y` and associated user stories `US-…`),
+     - user story detail files under `docs/01_product/user_stories/` when needed.
 
 3. **Design**
-   - Purpose: structure the system into business blocks, logical subsystems and technical artefacts.
+   - Purpose: structure the system into logical subsystems (`LS-…`) and technical artefacts (`TS-…`).
    - Main inputs: `docs/01_product/*`, existing design docs under `docs/02_design/*`.
    - Main outputs:
-     - updated `functional_architecture.md` (BF, `IF-BF-…`),
-     - updated `software_architecture.md` (LS, `IF-LS-…`),
-     - updated `technical_architecture.md` (TS, `IF-TS-…`),
+     - updated `software_architecture.md` (LS),
+     - updated `technical_architecture.md` (TS),
      - updated `tech_stack.md`, `data_model.md`,
      - initial skeletons / updates in `docs/04_operations/*` when design decisions impact operations.
 
@@ -114,7 +113,7 @@ The Build flow turns ideas into a tested candidate release.
      existing version plans (`docs/03_delivery/plan_X.Y.md`).
    - Main outputs:
      - updated `docs/03_delivery/plan_X.Y.md`,
-     - defined `LOT-…` entries with their FEAT/LS/TS/IF-* scope and testing strategy.
+     - defined `LOT-…` entries with their `US-…` scope and testing strategy.
 
 5. **Code**
    - Purpose: implement the behaviour and local tests for the selected LOTs.
@@ -219,14 +218,14 @@ LOT scope described in §1.
 
 All work goes through a `LOT-…`. A LOT carries **one main process** among:
 
-1. **Create a new feature**  
-   - Scope: one or more `FEAT-…` (and associated BF/LS).  
+1. **Create a new user story**  
+   - Scope: one or more `US-…` (and associated LS/TS).  
    - Version: new target version `X.Y.Z`.
 2. **Fix a bug**  
-   - Scope: impacted `FEAT`/`LS`/`TS`.  
+   - Scope: impacted `US`/`LS`/`TS`.  
    - Version: impacted existing version or a new patch version.
-3. **Modify an existing feature**  
-   - Scope: affected `FEAT`/`BF`/`LS`.  
+3. **Modify an existing user story / behaviour**  
+   - Scope: affected `US`/`LS`.  
    - Version: new MINOR or PATCH version depending on impact.
 4. **Set up infra / pipeline for the first time**  
    - Scope: one or more new `TS-…`.  
@@ -238,7 +237,7 @@ All work goes through a `LOT-…`. A LOT carries **one main process** among:
    - Scope: set of `LOT-…` to include in the same version `X.Y.Z`.  
    - Version: target release version.
 7. **Diagnose a production incident**  
-   - Scope: at least the impacted `TS-…`, then extended to identified `LS`/`FEAT`.  
+   - Scope: at least the impacted `TS-…`, then extended to identified `LS`/`US`.  
    - Version: impacted deployed version.
 8. **Rollback / deactivate a failing version**  
    - Scope: impacted version and related `TS`/`LS`.  
@@ -252,12 +251,12 @@ This project uses a simple Git flow, designed for **handling a single LOT at a t
 
 1. **Roadmap (`docs/01_product/ROADMAP.md`) → versions `X.Y`**  
    - The product view describes, for example:  
-     - _“In 1.4 we ship FEAT-0001, FEAT-0002…”_.
+     - _“In 1.4 we ship US-0001, US-0002…”_.
 
 2. **Version plan (`docs/03_delivery/plan_X.Y.md`) → `LOT-…`**  
    - The Orchestrator reads the roadmap for a version (e.g. `1.4`) and breaks it
      down into LOTs:  
-     - `LOT-001`: scope (FEAT/BF/LS/TS) and main process,  
+     - `LOT-001`: scope (set of `US-…`) and main process,  
      - `LOT-002`: same idea, etc.
 
 3. **`LOT-…` → Git branch**  
@@ -267,10 +266,10 @@ This project uses a simple Git flow, designed for **handling a single LOT at a t
    - All human/agent work for this LOT happens in **its** branch.  
    - The main branch (often `main`) is not modified directly.
 
-4. **Commits → trace `LOT` / `FEAT`**  
+4. **Commits → trace `LOT` / `US`**  
    - Commit messages on the LOT branch mention at least the LOT ID:  
-     - `LOT-001: impl FEAT-0001 service catalogue`.  
-   - When relevant, also include the `FEAT-…` / `LS-…` / `TS-…` IDs.
+     - `LOT-001: impl US-0001 strategy catalogue`.  
+   - When relevant, also include the `US-…` / `LS-…` / `TS-…` IDs.
 
 5. **PR/MR → merge into `main`**  
    - When the LOT is complete (code, tests and possibly infra):  
@@ -293,7 +292,7 @@ This project uses a simple Git flow, designed for **handling a single LOT at a t
   - allow opening an early PR/MR if desired,
   - save the starting point on the central repository.
 - Commit early and often, with clear and atomic messages
-  (including at least `LOT-…`, and if possible the `FEAT-…` / `LS-…` / `TS-…` IDs).
+  (including at least `LOT-…`, and if possible the `US-…` / `LS-…` / `TS-…` IDs).
 - Before opening a PR/MR:
   - ensure tests and quality tools (lint, format, etc.) pass locally.
 - The PR/MR is the single review point:
@@ -477,18 +476,18 @@ The roles below can be held by humans, agents, or a mix of both.
 - **Orchestrator (project lead / tech lead)**  
   - Reads: `CONVENTIONS.md`, `AGENTS.md`, `README.md`, `docs/02_design/tech_stack.md`.  
   - For each `LOT-…`:
-    - identifies the relevant `FEAT`, `LS`, `TS`,
+    - identifies the relevant `US`, `LS`, `TS`,
     - sequences the work: docs/plan → code → tests → infra → review.
 
-- **Feature & Domain Developer**  
-  - Reads: `FEAT-…`, `BF-…`, `LS-…`, the relevant version plan (`docs/03_delivery/plan_X.Y.md`).  
-  - Produces: application code in `src/` for the LOT’s `FEAT`.  
+- **Product & Domain Developer**  
+  - Reads: `US-…`, `EPIC-…`, `LS-…`, the relevant version plan (`docs/03_delivery/plan_X.Y.md`).  
+  - Produces: application code in `src/` for the LOT’s user stories.  
   - Does not change infra or stack choices.
 
 - **Tests & Quality Owner (QA/SDET)**  
-  - Reads: `FEAT-…`, `BF-…`, `LOT-…`, test section of the version plan (`docs/03_delivery/plan_X.Y.md`).  
-  - Produces: tests in `tests/` (unit, integration, contract) aligned with the LOT’s FEAT.  
-  - Does not create new features through tests.
+  - Reads: `US-…`, `LOT-…`, test section of the version plan (`docs/03_delivery/plan_X.Y.md`).  
+  - Produces: tests in `tests/` (unit, integration, contract) aligned with the LOT’s user stories.  
+  - Does not create new user stories through tests.
 
 - **Infra & Operations Owner (DevOps/SRE)**  
   - Reads: `TS-…`, `docs/02_design/technical_architecture.md`, `docs/02_design/tech_stack.md`, `docs/04_operations/*`.  
@@ -515,10 +514,16 @@ Agents must:
 - if no documentation language is declared yet, perform the language handshake
   described in `AGENTS.md` before creating or rewriting project documentation.
 
+When the project documentation language is set or changed, agents should
+propose, after the handshake, to progressively translate existing project
+documentation under `docs/*` into this language (excluding meta/config files
+as listed above), and only apply such translations after explicit human
+approval.
+
 Format:
 - Simple Markdown (headings `#`, `##`, lists, tables),
 - tables marked “Recommended format” contain **examples** to adapt,
-- identifiers (`FEAT-…`, `BF-…`, `LS-…`, `TS-…`, `LOT-…`) must be used as‑is.
+- identifiers (`ROLE-…`, `EPIC-…`, `US-…`, `LS-…`, `TS-…`, `LOT-…`) must be used as‑is.
 
 Style:
 - short sentences, focused on “what to do / know”,
@@ -531,19 +536,19 @@ Style:
   - code lives in a folder or namespace derived from its ID
     (e.g. `LS-SERVICE-CATALOGUE` → `src/service_catalogue/...`),
   - language conventions (formatter, linter) of the chosen stack should be respected.
-- File/module names may include functional IDs when relevant
-  (e.g. `feature_FEAT_0001_search.py`).
+- File/module names may include user story IDs when relevant
+  (e.g. `feature_US_0001_search.py`).
 
 ### 2.3 Tests (`tests/`)
 
-- Every important feature (`FEAT-…`) must have at least:
+- Every important user story (`US-…`) must have at least:
   - unit tests on key logic,
-  - integration or contract tests when interfaces are involved.
+  - integration or contract tests when interfaces or external systems are involved.
 - Files `docs/03_delivery/plan_X.Y.md` describe:
   - the types of tests expected,
   - the critical business behaviours to cover.
 - Test file names should reflect the tested scope
-  (for example by including the `FEAT-…` or `LS-…` ID).
+  (for example by including the `US-…` or `LS-…` ID).
 
 ### 2.4 Infra and CI/CD (`infra/`, pipelines)
 

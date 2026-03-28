@@ -6,6 +6,17 @@ This document defines the scope of `__PROJECT_NAME__` for `__ORG_NAME__`.
 See also:
 - [Product Brief](./product_brief.md)
 
+## Table of Contents
+
+- [1. Objective](#1-objective)
+- [2. Business Vision](#2-business-vision)
+- [3. Scope](#3-scope)
+- [4. Assumptions](#4-assumptions)
+- [5. Constraints](#5-constraints)
+- [6. Risks](#6-risks)
+- [7. Success Criteria](#7-success-criteria)
+- [Minimal scoping for agents](#minimal-scoping-for-agents)
+
 ---
 
 ## 1. Objective

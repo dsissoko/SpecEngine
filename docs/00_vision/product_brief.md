@@ -2,6 +2,15 @@
 
 This document introduces the product `__PROJECT_NAME__` for `__ORG_NAME__`.
 
+## Table of Contents
+
+- [1. Context](#1-context)
+- [2. Problem](#2-problem)
+- [3. Value Proposition](#3-value-proposition)
+- [4. Positioning](#4-positioning)
+- [5. Operating Principle](#5-operating-principle)
+- [6. Minimal completeness for agents](#6-minimal-completeness-for-agents)
+
 ## 1. Context
 Describe the context in which the product exists.
 
@@ -31,8 +40,8 @@ how the product works end‑to‑end.
 ## 6. Minimal completeness for agents
 
 For agents (humans or AI) to use this document as an input
-for structured work on the project (features `FEAT-…`,
-blocks `BF-…`, subsystems `LS-…`, technical artefacts `TS-…`,
+for structured work on the project (user stories `US-…`,
+subsystems `LS-…`, technical artefacts `TS-…`,
 delivery batches `LOT-…`, etc.), sections 1–5 above must contain
 real, project-specific content (not only placeholder text).
 

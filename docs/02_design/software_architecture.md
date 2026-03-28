@@ -5,7 +5,6 @@ This document describes the logical organisation of the `__PROJECT_NAME__`
 system into software subsystems for `__ORG_NAME__`.
 
 It complements:
-- the [functional architecture](./functional_architecture.md)
 - the [technical architecture](./technical_architecture.md)
 
 ---
@@ -60,22 +59,3 @@ Diagrams (e.g. C4) may be used to represent the system.
 
 These diagrams are simplified views.
 In case of discrepancy, this document is authoritative.
-
----
-
-## 8. Software Interfaces
-This chapter catalogues software interfaces between components/services
-(`IF-LS-…`).
-
-For each software interface, use a table with at least
-the following columns (illustrative examples below):
-
-| ID          | Provider (logical ID) | Consumer(s) (logical ID) | Type (sync/async/event) | Contract (API/port/message…) | Formal spec (link)       | Related BF/TS interfaces |
-|-------------|----------------------|---------------------------|-------------------------|------------------------------|--------------------------|-------------------------|
-| IF-LS-0001  | LS-SERVICE-CATALOGUE | LS-API-GW                 | Sync (HTTP)             | REST API `/products`         | `openapi/catalogue.yaml` | IF-BF-0001, IF-TS-0001  |
-| ...         | ...                  | ...                       | ...                     | ...                          | ...                      | ...                     |
-
-Interfaces described here must remain consistent with:
-- the functional architecture,
-- the technical architecture,
-- C4 diagrams (if any).

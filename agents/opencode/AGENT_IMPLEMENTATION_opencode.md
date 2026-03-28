@@ -104,7 +104,7 @@ Before real use:
   - reads the expected documents,
   - respects LOT perimeter,
   - does not act outside its role,
-  - correctly references IDs (`FEAT`, `LS`, `TS`, `LOT`).
+  - correctly references IDs (`US`, `ROLE`, `EPIC`, `LS`, `TS`, `LOT`).
 
 Goal: validate that configuration is operational.
 
@@ -132,11 +132,11 @@ Texts below serve as **examples** for these prompts.
   - You are responsible for implementing features from the project input artefacts.  
   - You primarily read:  
     - `docs/01_product/specifications.md`, `docs/01_product/ROADMAP.md`,  
-    - `docs/02_design/functional_architecture.md`, `docs/02_design/software_architecture.md`,  
+    - `docs/02_design/software_architecture.md`, `docs/02_design/technical_architecture.md`,  
     - `docs/02_design/tech_stack.md`,  
     - `CONVENTIONS.md`, `AGENTS.md`,  
     - the current LOT in the version plan (`docs/03_delivery/plan_X.Y.md`).  
-  - You write or modify code in `src/` for `FEAT-…` and `LS-…` of the LOT, respecting the stack and project standards.  
+  - You write or modify code in `src/` for user stories (`US-…`) and `LS-…` of the LOT, respecting the stack and project standards.  
   - You may create basic unit tests to validate your code, but you do not decide global testing strategies alone.  
   - You do not change product vision or roadmap; you do not modify infra or pipelines outside the LOT scope.
 
@@ -150,7 +150,7 @@ Texts below serve as **examples** for these prompts.
     - all of `docs/02_design/*`,  
     - files `docs/03_delivery/plan_X.Y.md` (test strategy and LOTs),  
     - `CONVENTIONS.md`, `AGENTS.md`.  
-  - You create or adapt tests in `tests/` (unit, integration, contract) for `FEAT-…` and `LS-…` of the LOT.  
+  - You create or adapt tests in `tests/` (unit, integration, contract) for user stories (`US-…`) and `LS-…` of the LOT.  
   - You ensure that important business behaviours described in the docs are covered by tests.  
   - You do not design new features and you do not change the tech stack or infra.
 
